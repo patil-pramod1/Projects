@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Select User Role</title>
+    <title>SignIn</title>
     <style>
     body {
         font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -57,8 +57,8 @@
 </head>
 <body>
     <div class="container">
-        <h1>Login As</h1>
-        <form action="RoleSelectionServlet" method="post">
+        <h1>Create Account</h1>
+        <form action="SignInServlet" method="post">
             <button type="submit" name="role" value="buyer" class="button">Buyer</button>
             <button type="submit" name="role" value="seller" class="button">Seller</button>
         </form>

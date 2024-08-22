@@ -7,33 +7,69 @@
     <title>Create Buyer Account</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        body {
-            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .card {
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-        .card-header {
-            background-color: #6c757d;
-            border-radius: 15px 15px 0 0;
-            color: white;
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-        .btn-primary {
-            background-color: #4B79A1;
-            border: none;
-            transition: background-color 0.3s ease;
-        }
-        .btn-primary:hover {
-            background-color: #283E51;
-        }
+body {
+    background: #f8f9fa;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px; /* Added padding for better spacing on smaller screens */
+}
+
+.card {
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Ensures children do not overflow the card */
+}
+
+.card-header {
+    background-color: #6c757d;
+    border-radius: 15px 15px 0 0;
+    color: white;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    padding: 15px; /* Added padding for better spacing */
+}
+
+.form-group label {
+    font-weight: bold; /* Makes labels bold for better visibility */
+}
+
+.form-control {
+    border-radius: 10px; /* Rounded corners for input fields */
+    transition: border-color 0.3s ease; /* Smooth transition for border color */
+}
+
+.form-control:focus {
+    border-color: #4B79A1; /* Change border color on focus */
+    box-shadow: 0 0 5px rgba(75, 121, 161, 0.5); /* Subtle shadow effect */
+}
+
+.btn-primary {
+    background-color: #4B79A1;
+    border: none;
+    border-radius: 10px; /* Rounded corners for the button */
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #283E51;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .card {
+        width: 100%; /* Full width for smaller screens */
+        margin: 0; /* Remove margin */
+    }
+    .card-header {
+        font-size: 1.25rem; /* Smaller font size for card header on mobile */
+    }
+    .btn-primary {
+        font-size: 1.1rem; /* Slightly larger button on mobile */
+    }
+}
     </style>
 </head>
 <body>

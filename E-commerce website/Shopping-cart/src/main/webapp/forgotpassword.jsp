@@ -9,21 +9,93 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
-            background-color: #f8f9fa;
+            background: linear-gradient(135deg, #e2f0cb, #f8f9fa);
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: left;
+            align-items: left;
+            height: 100vh;
         }
-        .container {
-            margin-top: 100px;
-        }
+
+       .container {
+    display: flex;
+    justify-content: left; /* Center horizontally */
+    align-items: right; /* Center vertically */
+    padding: 20px;
+    width: 55%; /* Full width of the screen */
+    height: 55%; /* Full height of the screen */
+    box-sizing: border-box;
+}
+
         .card {
-            border-radius: 10px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            background-color: #ffffff;
+            padding: 30px;
+            max-width: 400px;
+            width: 600%; /* Adjust width as needed */
+            box-sizing: border-box;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
-        .btn-primary {
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
             background-color: #007bff;
-            border-color: #007bff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
-        .btn-primary:hover {
+
+        button:hover {
             background-color: #0056b3;
-            border-color: #004085;
+        }
+
+        .link-container {
+            margin-top: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+            font-size: 14px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            color: #0056b3;
         }
     </style>
 </head>
@@ -33,7 +105,7 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header text-center">
-                        <h2 class="card-title">Forgot Password</h2>
+                        <h2>Forgot Password</h2>
                     </div>
                     <div class="card-body">
                         <form action="ForgotPasswordServlet" method="post">

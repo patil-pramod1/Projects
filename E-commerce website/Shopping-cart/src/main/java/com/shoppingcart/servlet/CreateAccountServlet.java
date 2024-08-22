@@ -53,6 +53,10 @@ public class CreateAccountServlet extends HttpServlet {
                 newUser.setLastName(lastName);
                 newUser.setPhoneNumber(phoneNumber);
                 newUser.setAddress(address);
+                newUser.setCity(city);
+                newUser.setState(state);
+                newUser.setZip_code(zipCode);
+
                 
 
                 boolean accountCreated = userDao.createAccount(newUser);

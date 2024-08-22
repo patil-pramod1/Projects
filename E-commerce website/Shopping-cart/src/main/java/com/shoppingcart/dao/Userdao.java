@@ -59,7 +59,7 @@ public class Userdao {
         boolean success = false;
         try {
             // SQL query to insert a new record into the buyeraccount table
-            query = "INSERT INTO revshop.buyeraccount (email, password, first_name, last_name, phone_number, address, city, state, zip_code) " +
+            query = "INSERT INTO revshop.buyeraccount (email, password, first_name, last_name, phone_number, address,city,state,zip_code) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             pst = this.connection.prepareStatement(query);
             pst.setString(1, newUser.getEmail());
@@ -68,6 +68,9 @@ public class Userdao {
             pst.setString(4, newUser.getLastName());
             pst.setString(5, newUser.getPhoneNumber());
             pst.setString(6, newUser.getAddress());
+            pst.setString(7, newUser.getCity());
+            pst.setString(8, newUser.getState());
+            pst.setString(9, newUser.getZip_code());
                        
             int rowsAffected = pst.executeUpdate();
             

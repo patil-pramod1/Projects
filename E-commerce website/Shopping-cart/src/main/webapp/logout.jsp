@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="refresh" content="0;URL='Index.jsp'" />
+    <meta http-equiv="refresh" content="5000;URL='Index.jsp'" />
     <title>Logging Out...</title>
 </head>
 <body>

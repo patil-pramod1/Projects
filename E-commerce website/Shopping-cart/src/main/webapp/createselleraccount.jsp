@@ -9,29 +9,69 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .container {
-            margin-top: 30px;
-        }
-        .form-container {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .btn-custom {
-            background-color: #007bff;
-            color: white;
-        }
-        .btn-custom:hover {
-            background-color: #0056b3;
-        }
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: none;
-        }
+body {
+    background-color: #f8f9fa; /* Light gray background for a clean look */
+    font-family: 'Arial', sans-serif; /* Modern font */
+    color: #333; /* Darker text color for better contrast */
+}
+
+.container {
+    margin-top: 30px; /* Space above the container */
+}
+
+.form-container {
+    background: #ffffff; /* White background for the form */
+    padding: 40px; /* Increased padding for better spacing */
+    border-radius: 12px; /* Slightly more rounded corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Softer shadow for depth */
+    transition: transform 0.3s; /* Smooth scaling effect on hover */
+}
+
+.form-container:hover {
+    transform: translateY(-2px); /* Slightly lift the form on hover */
+}
+
+.btn-custom {
+    background-color: #007bff; /* Primary button color */
+    color: #ffffff; /* White text for contrast */
+    border: none; /* Remove default border */
+    border-radius: 8px; /* Rounded corners for buttons */
+    padding: 10px 20px; /* Padding for better click area */
+    font-size: 16px; /* Larger font size for readability */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transition for hover effects */
+}
+
+.btn-custom:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: scale(1.05); /* Slightly enlarge button on hover */
+}
+
+.form-group label {
+    font-weight: bold; /* Make labels bold for better visibility */
+    margin-bottom: 5px; /* Space between label and input */
+}
+
+.form-control {
+    border-radius: 8px; /* Rounded corners for input fields */
+    border: 1px solid #ced4da; /* Default border color */
+    transition: border-color 0.3s; /* Smooth transition for border color */
+}
+
+.form-control:focus {
+    border-color: #007bff; /* Change border color on focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Subtle shadow effect */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .form-container {
+        padding: 20px; /* Less padding on smaller screens */
+    }
+    .btn-custom {
+        font-size: 14px; /* Slightly smaller button text */
+        padding: 8px 16px; /* Adjust padding for smaller buttons */
+    }
+}
     </style>
 </head>
 <body>

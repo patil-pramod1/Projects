@@ -10,13 +10,17 @@ public class UserModel {
     private String password;
     private String phone_number; // Assuming a phone number field
     private String address; // Assuming an address field
+    private String city;
+    private String state;
+    private String zip_code;
+    
 
     // Default constructor
     public UserModel() {
     }
 
     // Parameterized constructor
-    public UserModel(int id, String first_name, String last_name, String email, String password, String phone_number, String address) {
+    public UserModel(int id, String first_name, String last_name, String email, String password, String phone_number, String address,String city,String state,String zip_code) {
         this.id = id;
         this.first_name = first_name;
         this.last_name = last_name;
@@ -24,9 +28,14 @@ public class UserModel {
         this.password = password;
         this.phone_number = phone_number;
         this.address = address;
+        this.city=city;
+        this.state=state;
+        this.zip_code=zip_code;
     }
 
-    // Getters and Setters
+   
+
+	// Getters and Setters
     public int getId() {
         return id;
     }
@@ -109,12 +118,50 @@ public class UserModel {
             throw new IllegalArgumentException("Address cannot be null or empty");
         }
     }
+    public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+        if (city != null && !city.trim().isEmpty()) {
+            this.city = city;
+        } else {
+            throw new IllegalArgumentException("city cannot be null or empty");
+        }
+        
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+        if (state != null && !state.trim().isEmpty()) {
+            this.state = state;
+        } else {
+            throw new IllegalArgumentException("state cannot be null or empty");
+        }
+	}
+
+	public String getZip_code() {
+		return zip_code;
+	}
+
+	public void setZip_code(String zip_code) {
+        if (zip_code != null && !zip_code.trim().isEmpty()) {
+            this.zip_code = zip_code;
+        } else {
+            throw new IllegalArgumentException("zip_code cannot be null or empty");
+        }
+	}
 
     @Override
-    public String toString() {
-        return "UserModel [id=" + id + ", first_name=" + first_name + ", last_name=" + last_name + ", email=" + email + ", password=" + password + ", phone_number=" + phone_number + ", address=" + address + "]";
-    }
-
+	public String toString() {
+		return "UserModel [id=" + id + ", first_name=" + first_name + ", last_name=" + last_name + ", email=" + email
+				+ ", password=" + password + ", phone_number=" + phone_number + ", address=" + address + ", city="
+				+ city + ", state=" + state + ", zip_code=" + zip_code + "]";
+	}
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -126,11 +173,14 @@ public class UserModel {
                Objects.equals(email, that.email) &&
                Objects.equals(password, that.password) &&
                Objects.equals(phone_number, that.phone_number) &&
-               Objects.equals(address, that.address);
+               Objects.equals(address, that.address)&&
+               Objects.equals(city, that.city)&&
+               Objects.equals(state, that.state)&&
+               Objects.equals(zip_code, that.zip_code);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, first_name, last_name, email, password, phone_number, address);
+        return Objects.hash(id, first_name, last_name, email, password, phone_number, address,city,state,zip_code);
     }
 }
