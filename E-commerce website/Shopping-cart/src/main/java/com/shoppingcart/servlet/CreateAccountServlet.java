@@ -2,7 +2,7 @@ package com.shoppingcart.servlet;
 
 import com.shoppingcart.connection.DBconnection;
 import com.shoppingcart.dao.Userdao;
-import com.shoppingcart.UserModel;
+import com.shoppingcart.usermodel.UserModel;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

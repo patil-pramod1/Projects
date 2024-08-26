@@ -1,4 +1,4 @@
-package com.shoppingcart;
+package com.shoppingcart.usermodel;
 
 import java.util.Objects;
 

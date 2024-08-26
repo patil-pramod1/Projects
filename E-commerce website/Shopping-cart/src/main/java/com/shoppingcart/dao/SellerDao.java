@@ -1,6 +1,7 @@
 package com.shoppingcart.dao;
 
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -34,5 +35,28 @@ public class SellerDao {
             return false;
         }
     }
+    public boolean addProduct(String productName, String description, double price, String imageUrl, String category, int stockQuantity, String dateAdded, String lastUpdated, String email) {
+        String query = "INSERT INTO product (productName, description, price, imageUrl, category, stockQuantity, dateAdded, lastUpdated, vendorId) " +
+                       "VALUES (?, ?, ?, ?, ?, ?, ?, ?, (SELECT vendorId FROM selleraccount WHERE email = ?))";
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+            pst.setString(1, productName);
+            pst.setString(2, description);
+            pst.setBigDecimal(3, new BigDecimal(price).setScale(2));
+            pst.setString(4, imageUrl);
+            pst.setString(5, category);
+            pst.setInt(6, stockQuantity);
+            pst.setString(7, dateAdded);
+            pst.setString(8, lastUpdated);
+            pst.setString(9, email); // Bind email to the query
+
+            int result = pst.executeUpdate();
+            return result > 0; // Returns true if at least one row is affected
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }
 

@@ -49,14 +49,14 @@
 <body>
     <div class="login-container">
         <h2>Seller Login</h2>
-        <form action="LoginServlet" method="post">
+        <form action="SellerLoginServlet" method="post">
             <div class="form-group">
                 <label for="email">Email address</label>
-                <input type="email" class="form-control" id="email" name="Login-Email" required>
+                <input type="email" class="form-control" id="email" name="email" required>
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" name="Login-Password" required>
+                <input type="password" class="form-control" id="password" name="password" required>
             </div>
             <button type="submit" class="btn btn-primary btn-block">Login</button>
             <div class="text-center mt-3">

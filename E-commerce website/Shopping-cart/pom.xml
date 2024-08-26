@@ -85,7 +85,21 @@
             <version>4.0.1</version>
             <scope>provided</scope>
         </dependency>
-        
+        <dependency>
+        <groupId>jakarta.servlet</groupId>
+        <artifactId>jakarta.servlet-api</artifactId>
+        <version>5.0.0</version>
+        <scope>provided</scope>
+    </dependency>
+    
+    <!-- If you are using JSP -->
+    <dependency>
+        <groupId>jakarta.servlet.jsp</groupId>
+        <artifactId>jakarta.servlet.jsp-api</artifactId>
+        <version>3.0.0</version>
+        <scope>provided</scope>
+    </dependency>
+    
 
     </dependencies>
 </project>

@@ -4,14 +4,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 
-import com.shoppingcart.UserModel;
 import com.shoppingcart.connection.DBconnection;
 import com.shoppingcart.dao.Userdao;
+import com.shoppingcart.usermodel.UserModel;
 
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
@@ -21,12 +22,6 @@ public class LoginServlet extends HttpServlet {
     private static final String INDEX_JSP = "Index.jsp";
     private static final String LOGIN_EMAIL_PARAM = "Login-Email";
     private static final String LOGIN_PASSWORD_PARAM = "Login-Password";
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        response.sendRedirect(LOGIN_JSP_BUYER); // Or you can direct to a default login page
-    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
@@ -41,12 +36,21 @@ public class LoginServlet extends HttpServlet {
             UserModel user = userdao.userlogin(email, password);
 
             if (user != null) {
+                // Set both the user object and the email in the session
                 request.getSession().setAttribute("auth", user);
+                request.getSession().setAttribute("email", user.getEmail());
+
+                // Print session details to console
+                HttpSession session = request.getSession();
+                System.out.println("Session ID: " + session.getId());
+                System.out.println("User Email in session: " + session.getAttribute("email"));
+                System.out.println("User Auth Object in session: " + session.getAttribute("auth"));
+
                 response.sendRedirect(INDEX_JSP); // Redirect to Index.jsp on successful login
             } else {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 out.print("Login failed. Please check your email and password.");
-                response.sendRedirect("loginfail.jsp");
+                response.sendRedirect("loginfail.jsp"); // Redirect to a login failure page
             }
 
         } catch (ClassNotFoundException | SQLException e) {
@@ -55,4 +59,5 @@ public class LoginServlet extends HttpServlet {
             response.getWriter().print("An error occurred. Please try again later.");
         }
     }
+
 }
