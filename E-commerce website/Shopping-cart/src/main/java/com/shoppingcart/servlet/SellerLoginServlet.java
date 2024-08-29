@@ -56,11 +56,10 @@ public class SellerLoginServlet extends HttpServlet {
             e.printStackTrace();
             throw new ServletException("Database error occurred", e);
         } catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+            e1.printStackTrace();
+            throw new ServletException("Class not found", e1);
+        }
     }
-
 
     // Method to validate seller credentials
     private boolean validateSellerCredentials(Connection connection, String email, String password) throws SQLException {

@@ -10,6 +10,7 @@ import java.util.List;
 import com.shoppingcart.connection.DBconnection;
 import com.shoppingcart.usermodel.CartItem;
 import com.shoppingcart.usermodel.Product;
+import com.shoppingcart.usermodel.Review;
 
 public class ProductDAO {
 
@@ -90,4 +91,40 @@ public class ProductDAO {
         }
         return cartItems;
     }
+    public void addReview(int productId, String reviewerName, int rating, String comment) throws ClassNotFoundException {
+        try (Connection connection = DBconnection.getConnection()) {
+            String query = "INSERT INTO revshop.reviews (productId, reviewerName, rating, comment) VALUES (?, ?, ?, ?)";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, productId);
+            stmt.setString(2, reviewerName);
+            stmt.setInt(3, rating);
+            stmt.setString(4, comment);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public List<Review> getProductReviews(int productId) throws ClassNotFoundException {
+        List<Review> reviews = new ArrayList<>();
+        try (Connection connection = DBconnection.getConnection()) {
+            String query = "SELECT * FROM reviews WHERE productId = ?";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, productId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Review review = new Review();
+                review.setReviewId(rs.getInt("reviewId"));
+                review.setProductId(rs.getInt("productId"));
+                review.setRating(rs.getInt("rating"));
+                review.setComment(rs.getString("comment"));
+                review.setReviewerName(rs.getString("reviewerName"));
+                reviews.add(review);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return reviews;
+    }
+
 }

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
    <style>
     body {
-        background: linear-gradient(135deg, #e0f7fa, #f8f9fa);
+        background: linear-gradient(to right, #e0c3fc, #8ec5fc);
         font-family: 'Arial', sans-serif;
     }
     .login-container {

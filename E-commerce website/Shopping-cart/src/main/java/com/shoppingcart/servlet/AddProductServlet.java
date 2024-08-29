@@ -1,24 +1,32 @@
 package com.shoppingcart.servlet;
 
-import com.shoppingcart.dao.SellerDao;
-import com.shoppingcart.connection.DBconnection;
-
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import com.shoppingcart.connection.DBconnection;
+import com.shoppingcart.dao.SellerDao;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+
 @WebServlet("/AddProductServlet")
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+                 maxFileSize = 1024 * 1024 * 10,      // 10MB
+                 maxRequestSize = 1024 * 1024 * 50)   // 50MB
 public class AddProductServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
+
+    private static final String UPLOAD_DIR = "product.images"; // Relative path to your webapp directory
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -26,50 +34,65 @@ public class AddProductServlet extends HttpServlet {
         String productName = request.getParameter("productName");
         String description = request.getParameter("description");
         String priceStr = request.getParameter("price");
-        String imageUrl = request.getParameter("imageUrl");
         String category = request.getParameter("category");
         String stockQuantityStr = request.getParameter("stockQuantity");
-        System.out.println("Product Name: " + productName);
-        System.out.println("Description: " + description);
-        System.out.println("Price: " + priceStr);
-        System.out.println("Image URL: " + imageUrl);
-        System.out.println("Category: " + category);
-        System.out.println("Stock Quantity: " + stockQuantityStr);
+
+        // Get vendorId from the session or form
+        HttpSession session = request.getSession();
+        String vendorIdStr = request.getParameter("vendorId");  // Assuming vendorId is passed as a form input
+        String email = (String) session.getAttribute("auth");    // Get email from session
+
+        if (email == null) {
+            System.out.println("Email not found in session. Redirecting to login.");
+            response.sendRedirect("login_seller.jsp");
+            return;
+        }
 
         // Validate input
         if (productName == null || productName.trim().isEmpty() ||
             description == null || description.trim().isEmpty() ||
             priceStr == null || priceStr.trim().isEmpty() ||
-            imageUrl == null || imageUrl.trim().isEmpty() ||
             category == null || category.trim().isEmpty() ||
-            stockQuantityStr == null || stockQuantityStr.trim().isEmpty()) {
+            stockQuantityStr == null || stockQuantityStr.trim().isEmpty() ||
+            vendorIdStr == null || vendorIdStr.trim().isEmpty()) {
 
-            response.sendRedirect("sellerHomepage.jsp?error=1");
+            request.setAttribute("error", "Please fill out all required fields.");
+            request.getRequestDispatcher("addproduct.jsp").forward(request, response);
             return;
         }
 
         double price;
         int stockQuantity;
+        int vendorId;
 
         try {
             price = Double.parseDouble(priceStr.trim());
             stockQuantity = Integer.parseInt(stockQuantityStr.trim());
+            vendorId = Integer.parseInt(vendorIdStr.trim());  // Convert vendorId to int
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            response.sendRedirect("sellerHomepage.jsp?error=1");
+            request.setAttribute("error", "Invalid number format.");
+            request.getRequestDispatcher("addproduct.jsp").forward(request, response);
             return;
         }
 
-        // Get vendorId from session
-        HttpSession session = request.getSession();
-        String email = (String) session.getAttribute("auth");
+        // Handle file upload
+        Part filePart = request.getPart("imageFile"); // Retrieves <input type="file" name="imageFile">
+        String fileName = extractFileName(filePart);
+        String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIR;
 
-        if (email == null) {
-            response.sendRedirect("login_seller.jsp");
-            return;
+        // Ensure the directory exists
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
         }
 
+        // Save the file on the server
+        String filePath = uploadPath + File.separator + fileName;
+        filePart.write(filePath);
 
+        // Relative path to store in the database
+        String imageUrl = UPLOAD_DIR + "/" + fileName;
 
         // Current date and time
         String dateAdded = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -78,22 +101,35 @@ public class AddProductServlet extends HttpServlet {
         // Database connection and insertion
         try (Connection connection = DBconnection.getConnection()) {
             SellerDao sellerDao = new SellerDao(connection);
-            boolean isProductAdded = sellerDao.addProduct(productName, description, price, imageUrl, category, stockQuantity, dateAdded, lastUpdated, email);
+            // Pass vendorId and email to the DAO method
+            boolean isProductAdded = sellerDao.addProductseller(productName, description, price, imageUrl, category, stockQuantity, dateAdded, lastUpdated, vendorId, email);
 
             if (isProductAdded) {
-                response.sendRedirect("sellerHomepage.jsp?success=1");
+                request.setAttribute("success", "Product added successfully!");
             } else {
-                System.out.println("Failed to insert product: No rows affected.");
-                response.sendRedirect("sellerHomepage.jsp?error=1");
+                request.setAttribute("error", "Failed to add product.");
             }
+            request.getRequestDispatcher("sellerHomepage.jsp").forward(request, response);
         } catch (SQLException e) {
             System.out.println("SQL Exception: " + e.getMessage());
             e.printStackTrace();
-            response.sendRedirect("sellerHomepage.jsp?error=1");
-        } catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+            request.setAttribute("error", "Database error: " + e.getMessage());
+            request.getRequestDispatcher("sellerHomepage.jsp").forward(request, response);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Class not found: " + e.getMessage());
+            request.getRequestDispatcher("sellerHomepage.jsp").forward(request, response);
+        }
     }
 
+    private String extractFileName(Part part) {
+        String contentDisp = part.getHeader("content-disposition");
+        String[] items = contentDisp.split(";");
+        for (String s : items) {
+            if (s.trim().startsWith("filename")) {
+                return s.substring(s.indexOf("=") + 2, s.length() - 1);
+            }
+        }
+        return "";
+    }
 }

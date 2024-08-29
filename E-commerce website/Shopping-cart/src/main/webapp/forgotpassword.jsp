@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
-            background: linear-gradient(135deg, #e2f0cb, #f8f9fa);
+            background: linear-gradient(to right, #e0c3fc, #8ec5fc);
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;

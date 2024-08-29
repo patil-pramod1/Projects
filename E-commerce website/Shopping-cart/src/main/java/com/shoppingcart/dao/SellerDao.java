@@ -57,6 +57,28 @@ public class SellerDao {
             return false;
         }
     }
+    public boolean addProductseller(String productName, String description, double price, String imageUrl, String category, int stockQuantity, String dateAdded, String lastUpdated, int vendorId, String email) {
+        String query = "INSERT INTO product (productName, description, price, imageUrl, category, stockQuantity, dateAdded, lastUpdated, vendorId, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, productName);
+            ps.setString(2, description);
+            ps.setDouble(3, price);
+            ps.setString(4, imageUrl);
+            ps.setString(5, category);
+            ps.setInt(6, stockQuantity);
+            ps.setString(7, dateAdded);
+            ps.setString(8, lastUpdated);
+            ps.setInt(9, vendorId);  // Set vendorId as an int
+            ps.setString(10, email);  // Set email
+
+            int rowsInserted = ps.executeUpdate();
+            return rowsInserted > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 }
 

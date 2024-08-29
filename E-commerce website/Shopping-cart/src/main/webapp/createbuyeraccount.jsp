@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
 body {
-    background: #f8f9fa;
+    background: linear-gradient(to right, #e0c3fc, #8ec5fc);
     min-height: 100vh;
     display: flex;
     justify-content: center;

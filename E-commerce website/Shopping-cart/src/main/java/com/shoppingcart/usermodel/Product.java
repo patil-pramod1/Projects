@@ -10,6 +10,7 @@ public class Product {
     private String description;
     private String imageUrl;
     private String category;
+    private BigDecimal discount;
     
     
     
@@ -19,7 +20,7 @@ public class Product {
 	}
 
 	public Product(int productId, String productName, BigDecimal price, int stock, String description, String imageUrl,
-			String category) {
+			String category,BigDecimal discount) {
 		super();
 		this.productId = productId;
 		this.productName = productName;
@@ -28,12 +29,21 @@ public class Product {
 		this.description = description;
 		this.imageUrl = imageUrl;
 		this.category = category;
+		this.discount=discount;
 	}
 
 	// Existing constructors, getters, and setters...
-
+	
     public int getProductId() {
 		return productId;
+	}
+
+	public BigDecimal getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(BigDecimal discount) {
+		this.discount = discount;
 	}
 
 	public void setProductId(int productId) {

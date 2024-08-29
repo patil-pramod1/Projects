@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
 body {
-    background-color: #f8f9fa; /* Light gray background for a clean look */
+    background-color: linear-gradient(to right, #e0c3fc, #8ec5fc); /* Light gray background for a clean look */
     font-family: 'Arial', sans-serif; /* Modern font */
     color: #333; /* Darker text color for better contrast */
 }
