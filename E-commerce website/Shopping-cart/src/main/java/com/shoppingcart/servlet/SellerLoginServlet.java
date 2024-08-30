@@ -28,21 +28,19 @@ public class SellerLoginServlet extends HttpServlet {
 
         // Debugging: Log the received email and password
         System.out.println("Received email: " + email);
-        System.out.println("Received password: " + password);
 
         // Establish a connection to the database
         try (Connection connection = DBconnection.getConnection()) {
-            // Use the SellerDao to verify the seller's credentials
-            SellerDao sellerDao = new SellerDao(connection);
+            // Validate seller credentials
             boolean isValidSeller = validateSellerCredentials(connection, email, password);
-
-            // Debugging: Check the result of the validation
-            System.out.println("Is valid seller: " + isValidSeller);
 
             if (isValidSeller) {
                 // Create a new session for the seller
                 HttpSession session = request.getSession();
-                session.setAttribute("auth", email); // Use email as session attribute to identify the user
+                session.setAttribute("auth", email); // Store email as "auth"
+
+                // Debugging: Log that the seller was authenticated and session was set
+                System.out.println("Seller authenticated. Session email set to: " + email);
 
                 // Redirect to the seller's homepage
                 response.sendRedirect("sellerHomepage.jsp");
@@ -52,12 +50,9 @@ public class SellerLoginServlet extends HttpServlet {
                 request.getRequestDispatcher("login_seller.jsp").forward(request, response);
             }
 
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             throw new ServletException("Database error occurred", e);
-        } catch (ClassNotFoundException e1) {
-            e1.printStackTrace();
-            throw new ServletException("Class not found", e1);
         }
     }
 

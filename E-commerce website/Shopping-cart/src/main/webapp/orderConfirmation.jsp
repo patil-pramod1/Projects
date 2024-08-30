@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="includes/navbar.jsp" %>
+<%@ page import="java.math.*"  %>
+<%@ page import="java.util.List"  %>
+<%@ page import="java.sql.*"  %>
+<%@ page import="com.shoppingcart.dao.*"  %>
+<%@ page import="com.shoppingcart.usermodel.*"  %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -33,10 +38,6 @@
             padding: 10px;
         }
 
-        .payment-options {
-            margin-top: 20px;
-        }
-
         .btn-submit {
             margin-top: 20px;
             width: 100%;
@@ -49,7 +50,7 @@
     <div class="container confirmation-container">
         <h2 class="confirmation-header">Order Confirmation</h2>
 
-        <form action="ProcessOrderServlet" method="post">
+        <form id="orderForm" action="ProcessOrderServlet" method="post">
             <div class="form-group">
                 <label for="fullName">Full Name:</label>
                 <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Enter your full name" required>
@@ -80,43 +81,91 @@
                 <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter your phone number" required>
             </div>
 
-            <div class="payment-options">
-                <h4>Select Payment Method</h4>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="paymentMethod" id="creditCard" value="Credit Card" required>
-                    <label class="form-check-label" for="creditCard">
-                        Credit Card
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="paymentMethod" id="debitCard" value="Debit Card" required>
-                    <label class="form-check-label" for="debitCard">
-                        Debit Card
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="paymentMethod" id="paypal" value="PayPal" required>
-                    <label class="form-check-label" for="paypal">
-                        PayPal
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="paymentMethod" id="cod" value="Cash on Delivery" required>
-                    <label class="form-check-label" for="cod">
-                        Cash on Delivery
-                    </label>
-                </div>
+            <div class="form-group">
+                <label for="paymentMethod">Payment Method:</label>
+                <select class="form-control" id="paymentMethod" name="paymentMethod" required>
+                    <option value="">Select Payment Method</option>
+                    <option value="Credit Card">Credit Card</option>
+                    <option value="Debit Card">Debit Card</option>
+                    <option value="Net Banking">Net Banking</option>
+                    <option value="UPI">UPI</option>
+                </select>
             </div>
 
             <input type="hidden" name="cartId" value="<%= request.getParameter("cartId") %>" />
 
-            <button type="submit" class="btn btn-primary btn-submit">Confirm Order</button>
+            <button type="button" id="payButton" class="btn btn-primary btn-submit">Confirm Order</button>
         </form>
-    </div>
 
-    <!-- Bootstrap JS, Popper.js, and jQuery -->
+        <%
+            String userEmail = (String) session.getAttribute("email");
+            BigDecimal totalAmount = BigDecimal.ZERO;
+            int quantity = 0;
+            List<Order> orders = null;
+
+            try {
+                OrderDAO orderDAO = new OrderDAO();
+                orders = orderDAO.getOrdersByUser(userEmail);
+
+                if (orders != null && !orders.isEmpty()) {
+                    for (Order order : orders) {
+                        totalAmount = order.getPrice().setScale(2, RoundingMode.HALF_UP);
+                        quantity = order.getQuantity();
+                    }
+                }
+
+            } catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace();
+                response.sendRedirect("error.jsp");
+                return;
+            }
+
+            out.print("The total price to be paid is : " + totalAmount.multiply(new BigDecimal(quantity)));
+        %>
+
+    </div>
+    <!-- Razorpay JavaScript SDK -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <script>
+        document.getElementById('payButton').onclick = function(e){
+            var options = {
+                "key": "rzp_test_dChgnE1vVIlVnK", // Replace with your Razorpay API Key
+                "amount": "<%= totalAmount.multiply(new BigDecimal(100)) %>", // Amount in paise
+                "currency": "INR",
+                "name": "Your Company Name",
+                "description": "Order #123456",
+                "image": "https://your_company_logo_url", // Replace with your company logo URL
+                "handler": function (response){
+                    alert("Payment successful. Payment ID: " + response.razorpay_payment_id);
+                    document.getElementById('orderForm').submit();
+                },
+                "prefill": {
+                    "name": document.getElementById('fullName').value,
+                    "email": "<%= userEmail != null ? userEmail : "customer@example.com" %>",
+                    "contact": document.getElementById('phone').value
+                },
+                "notes": {
+                    "address": document.getElementById('address').value
+                },
+                "theme": {
+                    "color": "#3399cc"
+                },
+                "modal": {
+                    "ondismiss": function(){
+                        alert('Payment was not completed. Please try again.');
+                    }
+                }
+            };
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+            e.preventDefault();
+        }
+    </script>
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 </html>

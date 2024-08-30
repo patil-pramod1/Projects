@@ -80,10 +80,17 @@
         <label for="imageFile">Upload Image:</label>
         <input type="file" class="form-control" id="imageFile" name="imageFile" accept="image/*" required>
     </div>
-    <div class="form-group">
-        <label for="category">Category:</label>
-        <input type="text" class="form-control" id="category" name="category" required>
-    </div>
+   <div class="form-group">
+    <label for="category">Category:</label>
+    <select class="form-control" id="category" name="category" required>
+        <option value="Electronics">Electronic and Accessories</option>
+        <option value="Clothing">Clothing and Accessories</option>
+        <option value="Home">Home and Kitchen</option>
+        <option value="Grocery">Grocery</option>
+        <!-- Add more categories as needed -->
+    </select>
+</div>
+
     <div class="form-group">
         <label for="stockQuantity">Stock Quantity:</label>
         <input type="number" class="form-control" id="stockQuantity" name="stockQuantity" required>
@@ -109,4 +116,5 @@ $(document).ready(function() {
 });
 </script>
 </body>
+<%@ include file="includes/footer.jsp" %>
 </html>

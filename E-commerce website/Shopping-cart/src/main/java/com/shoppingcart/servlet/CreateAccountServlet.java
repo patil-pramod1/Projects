@@ -55,7 +55,7 @@ public class CreateAccountServlet extends HttpServlet {
                 newUser.setAddress(address);
                 newUser.setCity(city);
                 newUser.setState(state);
-                newUser.setZip_code(zipCode);
+                newUser.setZipCode(zipCode);
 
                 
 

@@ -7,75 +7,131 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-    .navbar-brand {
-            color: #ffffff; /* White text for brand and icon */
-            font-weight: bold; /* Bold font for brand and icon */
-            font-size: 1.25rem; /* Increased font size for better visibility */
-            margin-right: 15px; /* Space between the icon and brand name */
-        }
-    
         body {
-        background-color: linear-gradient(to right, #e0c3fc, #8ec5fc);
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
         }
+        
         .footer-top {
-            background-color: #232f3e;
-            color: #fff;
+            background: linear-gradient(90deg, #6a11cb, #2575fc); /* Same gradient as the navbar */
+            color: #ffffff;
             padding: 40px 0;
         }
-        .footer-bottom {
-            background-color: linear-gradient(to right, #e0c3fc, #8ec5fc);
-            color: #999;
-            padding: 20px 0;
-            font-size: 0.8rem;
-        }
+        
         .footer-heading {
-            color: #fff;
+            color: #ffffff; /* White text for headings */
             font-size: 1rem;
             font-weight: bold;
             margin-bottom: 15px;
         }
+        
         .footer-links {
             list-style-type: none;
             padding: 0;
             margin: 0;
         }
+        
         .footer-links li {
             margin-bottom: 10px;
         }
+        
         .footer-links a {
-            color: #ddd;
+            color: #ffffff; /* White link text */
             text-decoration: none;
+            transition: color 0.3s ease, transform 0.3s ease; /* Same transition as the navbar */
         }
+        
         .footer-links a:hover {
+            color: #ffd700; /* Gold color on hover */
             text-decoration: underline;
+            transform: scale(1.05); /* Slightly enlarge link on hover */
         }
+        
         .social-icons {
             font-size: 1.5rem;
         }
+        
         .social-icons a {
-            color: #fff;
+            color: #ffffff;
             margin-right: 15px;
+            transition: color 0.3s ease, transform 0.3s ease; /* Same transition as the navbar */
         }
+        
+        .social-icons a:hover {
+            color: #ffd700; /* Gold color on hover */
+            transform: scale(1.1); /* Slightly enlarge icon on hover */
+        }
+        
+        .footer-bottom {
+            background-color: #232f3e; /* Dark background for the footer bottom */
+            color: #999999; /* Light grey text */
+            padding: 20px 0;
+            font-size: 0.8rem;
+        }
+        
+        .footer-bottom a {
+            color: #999999; /* Light grey link text */
+            text-decoration: none;
+        }
+        
+        .footer-bottom a:hover {
+            color: #ffffff; /* White color on hover */
+        }
+        
         .back-to-top {
-            background-color: #37475a;
-            color: #fff;
+            background-color: #6a11cb; /* Use the same gradient color */
+            color: #ffffff;
             text-align: center;
             padding: 15px 0;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
+        
         .back-to-top:hover {
-            background-color: #485769;
+            background-color: #2575fc; /* Transition to the other gradient color */
         }
+        .footer-bottom {
+    background: linear-gradient(90deg, #6a11cb, #2575fc); /* Same gradient as other divs */
+    color: #ffffff; /* White text color */
+    padding: 20px 0;
+    font-size: 0.9rem;
+}
+
+.footer-link {
+    color: #ffffff; /* White link text */
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.footer-link:hover {
+    color: #ffd700; /* Gold color on hover */
+    transform: scale(1.05); /* Slightly enlarge link on hover */
+}
+
+.footer-bottom p {
+    margin: 0;
+    color: #ffffff; /* White text */
+}
+        
     </style>
 </head>
 <body>
     <footer>
-        <div class="back-to-top">
+        <div class="back-to-top" onclick="scrollToTop()">
             Back to top
         </div>
+        <!-- Rest of your footer content -->
+    
+
+    <script>
+    function scrollToTop() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
+    </script>
         <div class="footer-top">
             <div class="container">
                 <div class="row">
@@ -119,32 +175,33 @@
                 </div>
                 <hr style="border-color: #3a4553;">
                 <div class="row">
-                    <div class="col-md-12 text-center">
-                        <a class="navbar-brand" href="Index.jsp">RevShop</a>
-                        <div class="social-icons">
-                            <a href="#"><i class="fab fa-facebook"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-youtube"></i></a>
-                        </div>
-                    </div>
-                </div>
+    <div class="col-md-12 text-center">
+        <a class="navbar-brand" style="color: #ffffff;">RevShop</a>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+    </div>
+</div>
+
+  <div class="footer-bottom">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <p>&copy; 2024 RevShop. All rights reserved.</p>
+                <p>
+                    <a href="#" class="footer-link mr-2">Conditions of Use</a>
+                    <a href="#" class="footer-link mr-2">Privacy Notice</a>
+                    <a href="#" class="footer-link">Interest-Based Ads</a>
+                </p>
             </div>
         </div>
-        <div class="footer-bottom">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12 text-center">
-                        <p>&copy; 2023 Your Online Store. All rights reserved.</p>
-                        <p>
-                            <a href="#" class="text-muted mr-2">Conditions of Use</a>
-                            <a href="#" class="text-muted mr-2">Privacy Notice</a>
-                            <a href="#" class="text-muted">Interest-Based Ads</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
+    </div>
+</div>
+
+
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>

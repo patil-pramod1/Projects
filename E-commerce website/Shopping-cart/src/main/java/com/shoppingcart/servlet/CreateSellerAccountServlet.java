@@ -1,27 +1,24 @@
 package com.shoppingcart.servlet;
 
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 import com.shoppingcart.connection.DBconnection;
-import com.shoppingcart.dao.SellerDao;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 @WebServlet("/CreateSellerAccountServlet")
 public class CreateSellerAccountServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    public CreateSellerAccountServlet() {
-        super();
-    }
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Retrieve form data
+        // Get form data
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String firstName = request.getParameter("first_name");
@@ -34,36 +31,37 @@ public class CreateSellerAccountServlet extends HttpServlet {
         String storeName = request.getParameter("store_name");
         String storeDescription = request.getParameter("store_description");
 
-        Connection connection = null;
-        try {
-            // Establish database connection
-            connection = DBconnection.getConnection();
+        // Establish a database connection
+        try (Connection connection = DBconnection.getConnection()) {
+            // Insert data into the selleraccount table
+            String query = "INSERT INTO revshop.selleraccount (email, password, first_name, last_name, phone_number, address, city, state, zip_code, store_name, store_description) " +
+                           "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            try (PreparedStatement pst = connection.prepareStatement(query)) {
+                pst.setString(1, email);
+                pst.setString(2, password);
+                pst.setString(3, firstName);
+                pst.setString(4, lastName);
+                pst.setString(5, phoneNumber);
+                pst.setString(6, address);
+                pst.setString(7, city);
+                pst.setString(8, state);
+                pst.setString(9, zipCode);
+                pst.setString(10, storeName);
+                pst.setString(11, storeDescription);
 
-            // Create an instance of SellerDao
-            SellerDao sellerDao = new SellerDao(connection);
-
-            // Create a seller account
-            boolean success = sellerDao.createSellerAccount(email, password, firstName, lastName, phoneNumber, address, city, state, zipCode, storeName, storeDescription);
-
-            if (success) {
-                // Redirect to a success page or display a success message
-                response.sendRedirect("userrole.jsp"); // Change to your actual success page
-            } else {
-                // Redirect to an error page or display an error message
-                response.sendRedirect("error.jsp"); // Change to your actual error page
-            }
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-            response.sendRedirect("error.jsp"); // Change to your actual error page
-        } finally {
-            // Clean up resources
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
+                // Execute the insert statement
+                int rowsAffected = pst.executeUpdate();
+                if (rowsAffected > 0) {
+                    // Redirect to a success page or login page
+                    response.sendRedirect("login_seller.jsp");
+                } else {
+                    // Handle failure (e.g., redirect to an error page)
+                    response.sendRedirect("error.jsp");
                 }
             }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            response.sendRedirect("error.jsp");
         }
     }
 }

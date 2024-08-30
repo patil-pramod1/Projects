@@ -1,13 +1,13 @@
 package com.shoppingcart.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 
 import com.shoppingcart.connection.DBconnection;
 import com.shoppingcart.dao.Userdao;
 import com.shoppingcart.usermodel.UserModel;
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,40 +24,49 @@ public class LoginServlet extends HttpServlet {
     private static final String LOGIN_PASSWORD_PARAM = "Login-Password";
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
-            throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         response.setContentType("text/html; charset=UTF-8");
 
         String email = request.getParameter(LOGIN_EMAIL_PARAM);
         String password = request.getParameter(LOGIN_PASSWORD_PARAM);
 
-        try (PrintWriter out = response.getWriter()) {
-            Userdao userdao = new Userdao(DBconnection.getConnection());
-            UserModel user = userdao.userlogin(email, password);
+        if (email == null || password == null || email.trim().isEmpty() || password.trim().isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.sendRedirect("loginfail.jsp");
+            return;
+        }
+
+        try {
+            // Initialize UserDao with a database connection
+            Userdao userDao = new Userdao(DBconnection.getConnection());
+
+            // Attempt to authenticate the user
+            UserModel user = userDao.userLogin(email, password);
 
             if (user != null) {
                 // Set both the user object and the email in the session
-                request.getSession().setAttribute("auth", user);
-                request.getSession().setAttribute("email", user.getEmail());
-
-                // Print session details to console
                 HttpSession session = request.getSession();
+                session.setAttribute("auth", user);
+                session.setAttribute("email", user.getEmail());
+
+                // Optionally log session details to the console
                 System.out.println("Session ID: " + session.getId());
                 System.out.println("User Email in session: " + session.getAttribute("email"));
                 System.out.println("User Auth Object in session: " + session.getAttribute("auth"));
 
-                response.sendRedirect(INDEX_JSP); // Redirect to Index.jsp on successful login
+                // Redirect to Index.jsp on successful login
+                response.sendRedirect(INDEX_JSP);
             } else {
+                // If authentication fails, set the response status and redirect to the failure page
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                out.print("Login failed. Please check your email and password.");
-                response.sendRedirect("loginfail.jsp"); // Redirect to a login failure page
+                response.sendRedirect("loginfail.jsp");
             }
 
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().print("An error occurred. Please try again later.");
+            response.sendRedirect("error.jsp");
         }
     }
-
 }

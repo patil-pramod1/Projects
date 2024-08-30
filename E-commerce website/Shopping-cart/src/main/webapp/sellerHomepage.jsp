@@ -1,14 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="com.shoppingcart.usermodel.Product" %>
-<%@ page import="java.sql.Connection" %>
-<%@ page import="java.sql.PreparedStatement" %>
-<%@ page import="java.sql.ResultSet" %>
-<%@ page import="java.sql.Connection" %>
-<%@ page import="java.sql.Statement" %>
-<%@ page import="java.sql.ResultSet" %>
-<%@ page import="java.sql.SQLException" %>
-<%@ page import="java.util.*" %>
-<%@ page import="com.shoppingcart.connection.DBconnection" %>
+<%@ page import="com.shoppingcart.usermodel.*"%>
+<%@ page import="java.sql.Connection"%>
+<%@ page import="java.sql.PreparedStatement"%>
+<%@ page import="java.sql.ResultSet"%>
+<%@ page import="java.sql.SQLException"%>
+<%@ page import="com.shoppingcart.connection.DBconnection"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,8 +12,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - RevShop</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome CDN -->
-     <style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
@@ -35,6 +31,10 @@
         .container {
             margin-top: 20px;
             max-width: 1200px;
+        }
+
+        .product-container {
+            margin-top: 0.5cm;
         }
 
         .product-grid {
@@ -129,82 +129,72 @@
     </style>
 </head>
 <body>
-<%@ include file="includes/navbarseller.jsp" %>
+    <%@ include file="includes/navbarseller.jsp"%>
+    <div class="container product-container">
+        <h2>Products</h2>
+        <div class="product-grid">
+            <%
+                // Check if the seller is logged in by checking if 'auth' is stored as a String
+                String sellerEmail = (String) session.getAttribute("auth");
+                if (sellerEmail == null) {
+                    response.sendRedirect("login_seller.jsp");
+                    return;
+                }
 
-      <div class="container product-container">
-      <h2>Products</h2>
-    <div class="product-grid">
-        <%
-            // Check if the seller is logged in
-            if (session.getAttribute("auth") == null) {
-                response.sendRedirect("login_seller.jsp");
-                return;
-            }
+                try (Connection conn = DBconnection.getConnection();
+                     PreparedStatement ps = conn.prepareStatement("SELECT * FROM revshop.product WHERE sellerEmail = ?")) {
+                    
+                    // Set the seller's email in the query
+                    ps.setString(1, sellerEmail);
 
-            // Retrieve the seller's email from the session
-            String sellerEmail = (String) session.getAttribute("auth");
-
-            try (Connection conn = DBconnection.getConnection();
-                 PreparedStatement ps = conn.prepareStatement("SELECT * FROM revshop.product WHERE email = ?")) {
-
-                // Set the seller's email in the query
-                ps.setString(1, sellerEmail);
-
-                try (ResultSet rs = ps.executeQuery()) {
-
-                    if (!rs.isBeforeFirst()) { // Check if result set is empty
-        %>
-                        <p class="empty-product-message">You have not added any products yet.</p>
-        <%
-                    } else {
-                        while (rs.next()) {
-                            String productId = rs.getString("productId");
-                            String productName = rs.getString("productName");
-                            String productImage = rs.getString("imageUrl");
-                            String productPrice = rs.getString("price");
-                            String productDescription = rs.getString("description");
-                            int stock = rs.getInt("stockQuantity");
-        %>
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (!rs.isBeforeFirst()) { // Check if result set is empty
+            %>
+            <p class="empty-product-message">You have not added any products yet.</p>
+            <%
+                        } else {
+                            while (rs.next()) {
+                                String productId = rs.getString("productId");
+                                String productName = rs.getString("productName");
+                                String productImage = rs.getString("imageUrl");
+                                String productPrice = rs.getString("price");
+                                int stock = rs.getInt("stockQuantity");
+            %>
             <div class="product-card">
                 <img src="<%= productImage %>" alt="<%= productName %>" style="width: 200px; height: 100px;">
-
                 <h3><%= productName %></h3>
-                <p><%= productDescription %></p>
                 <p class="price">Rs.<%= productPrice %></p>
                 <p>Stock: <%= stock %></p>
                 
                 <!-- Edit and Remove buttons -->
-<!-- Edit and Remove buttons -->
-<form action="editproduct.jsp" method="get" style="display: inline;">
-    <input type="hidden" name="productId" value="<%= productId %>" />
-    <button type="submit" class="btn btn-warning">Edit</button>
-</form>
-
-<form action="RemoveProductServlet" method="post" style="display: inline;">
-    <input type="hidden" name="productId" value="<%= productId %>" />
-    <button type="submit" class="btn btn-danger">Remove</button>
-</form>
-
+                <form action="editproduct.jsp" method="get" style="display: inline;">
+                    <input type="hidden" name="productId" value="<%= productId %>" />
+                    <button type="submit" class="btn btn-warning">Edit</button>
+                </form>
+                <br>
+                <form action="RemoveProductServlet" method="post" style="display: inline;">
+                    <input type="hidden" name="productId" value="<%= productId %>" />
+                    <button type="submit" class="btn btn-danger">Remove</button>
+                </form>
             </div>
-        <%
-                        } // end while
-                    } // end if-else
-                } // end try with ResultSet
-            } catch (SQLException e) {
-                e.printStackTrace();
-                out.println("<div class='alert alert-danger' role='alert'>Failed to connect to the database.</div>");
-            }
-        %>
+            <%
+                            } // end while
+                        } // end if-else
+                    } // end try with ResultSet
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    out.println("<div class='alert alert-danger' role='alert'>Failed to connect to the database.</div>");
+                }
+            %>
+        </div>
     </div>
-</div>
-
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<!-- Include jQuery first -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Then include Bootstrap's JS -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <%@ include file="includes/footer.jsp"%>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Include jQuery first -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Then include Bootstrap's JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

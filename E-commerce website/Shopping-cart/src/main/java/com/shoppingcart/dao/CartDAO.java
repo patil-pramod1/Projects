@@ -34,6 +34,9 @@ public class CartDAO {
             if (rs.next()) {
                 return rs.getInt(1) > 0;  // Returns true if the item exists
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
         }
         return false;
     }
@@ -51,6 +54,9 @@ public class CartDAO {
                 statement.setString(2, email);
                 statement.setInt(3, productId);
                 statement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw e;
             }
         } else {
             // If the item does not exist, insert a new one
@@ -63,6 +69,9 @@ public class CartDAO {
                 statement.setInt(3, quantity);
                 statement.setDouble(4, price);
                 statement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw e;
             }
         }
     }
@@ -85,8 +94,18 @@ public class CartDAO {
                 item.setProductName(rs.getString("productName"));  // Assuming productName is stored in the cart table
                 item.setQuantity(rs.getInt("quantity"));
                 item.setPrice(rs.getBigDecimal("price"));
+                item.setFullName(rs.getString("fullName"));
+                item.setAddress(rs.getString("address"));
+                item.setCity(rs.getString("city"));
+                item.setState(rs.getString("state"));
+                item.setZipCode(rs.getString("zipCode"));
+                item.setPhone(rs.getString("phone"));
+                item.setPaymentMethod(rs.getString("paymentMethod"));
                 cartItems.add(item);
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
         }
         return cartItems;
     }
@@ -100,18 +119,35 @@ public class CartDAO {
             statement.setInt(1, quantity);
             statement.setInt(2, cartId);
             statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
         }
     }
 
     // Method to remove an item from the cart
     public void removeFromCart(int cartId) throws SQLException {
-    	 System.out.println("Removing cart item with cartId: " + cartId);
+        System.out.println("Removing cart item with cartId: " + cartId);
+        
         String sql = "DELETE FROM revshop.cart WHERE cartId = ?";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
+            // Set the cartId parameter
             statement.setInt(1, cartId);
-            statement.executeUpdate();
+
+            // Execute the deletion
+            int rowsAffected = statement.executeUpdate();
+            
+            if (rowsAffected > 0) {
+                System.out.println("Cart item with cartId " + cartId + " removed successfully.");
+            } else {
+                System.out.println("Cart item with cartId " + cartId + " not found.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error removing cart item with cartId: " + cartId);
+            e.printStackTrace();
+            throw e;  // Re-throw the exception to handle it further up the stack
         }
     }
 
@@ -134,7 +170,17 @@ public class CartDAO {
                 item.setProductName(rs.getString("productName"));
                 item.setQuantity(rs.getInt("quantity"));
                 item.setPrice(rs.getBigDecimal("price"));
+                item.setFullName(rs.getString("fullName"));
+                item.setAddress(rs.getString("address"));
+                item.setCity(rs.getString("city"));
+                item.setState(rs.getString("state"));
+                item.setZipCode(rs.getString("zipCode"));
+                item.setPhone(rs.getString("phone"));
+                item.setPaymentMethod(rs.getString("paymentMethod"));
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
         }
         return item;
     }
@@ -147,6 +193,9 @@ public class CartDAO {
 
             statement.setString(1, email);
             statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
         }
     }
 }

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
+<%@ page import="java.math.BigDecimal" %>
 <%@ page import="java.sql.SQLException" %>
 <%@ page import="com.shoppingcart.usermodel.Order" %>
 <%@ page import="com.shoppingcart.dao.OrderDAO" %>
@@ -49,66 +50,83 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container order-container">
         <h2>Your Orders</h2>
         <%
-            if (session.getAttribute("auth") == null) {
+            String userEmail = (String) session.getAttribute("email");
+            if (userEmail == null || userEmail.isEmpty()) {
                 response.sendRedirect("login_buyer.jsp");
                 return;
             }
 
-            String userEmail = (String) session.getAttribute("email");
-
-            OrderDAO orderDAO = new OrderDAO();
             List<Order> orders = null;
 
             try {
+                OrderDAO orderDAO = new OrderDAO();
                 orders = orderDAO.getOrdersByUser(userEmail);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                response.sendRedirect("error.jsp");
-            }
 
-            if (orders == null || orders.isEmpty()) {
+                // Update order status based on payment success or failure
+                if (orders != null) {
+                    for (Order order : orders) {
+                        String paymentStatus = order.getPaymentStatus();
+                        if (paymentStatus != null && paymentStatus.equals("SUCCESS")) {
+                            order.setOrderStatus("Order Placed");
+                        } else {
+                            order.setOrderStatus("Failed");
+                        }
+                        orderDAO.updateOrderStatus(order); // Assuming this method exists in OrderDAO
+                    }
+                }
+
+                if (orders != null && !orders.isEmpty()) {
         %>
-            <p class="no-orders-message">You have not placed any orders yet.</p>
+        <table class="order-table table table-hover">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Order Date</th>
+                    <th>Shipping Address</th>
+                    <th>Payment Method</th>
+                    <th>Order Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%
+                    for (Order order : orders) {
+                %>
+                <tr>
+                    <td><%= order.getProductName() %></td>
+                    <td><%= order.getQuantity() %></td>
+                    <td>Rs.<%= order.getPrice().multiply(new BigDecimal(order.getQuantity())) %></td>
+                    <td><%= new java.text.SimpleDateFormat("dd-MM-yyyy").format(order.getOrderDate()) %></td>
+                    <td><%= order.getAddress() %>, <%= order.getCity() %>, <%= order.getState() %>, <%= order.getZipCode() %></td>
+                    <td><%= order.getPaymentMethod() %></td>
+                    <td><%= order.getOrderStatus() %></td>
+                </tr>
+                <%
+                    }
+                %>
+            </tbody>
+        </table>
         <%
             } else {
         %>
-            <table class="order-table table table-hover">
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Product Name</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Order Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <%	int i=1;
-                        for (Order order : orders) {
-                        	
-                    %>
-                    <tr>
-                        <td><%= i %></td>
-                        <td><%= order.getProductName() %></td>
-                        <td><%= order.getQuantity() %></td>
-                        <td>Rs.<%= order.getPrice() %></td>
-                        <td><%= order.getOrderDate() %></td>
-                    </tr>
-                    <%
-                      		i++;  }
-                    %>
-                </tbody>
-            </table>
+        <p class="no-orders-message">No orders found.</p>
         <%
+            }
+        %>
+        <%
+            } catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace(); // Log the exception using a logging framework
+                out.println("<p class='text-danger'>An error occurred while fetching orders. Please try again later.</p>");
             }
         %>
     </div>
 
-    <!-- Bootstrap JS, Popper.js, and jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

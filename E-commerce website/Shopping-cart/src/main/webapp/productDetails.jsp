@@ -1,4 +1,3 @@
-
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.shoppingcart.usermodel.Product" %>
 <%@ page import="com.shoppingcart.usermodel.Review" %>
@@ -117,10 +116,40 @@
         .text-success {
             color: #28a745; /* Bootstrap success color */
         }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px; /* Space above the button group */
+        }
+
+        .add-to-cart-btn, .buy-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 12px; /* Slightly reduce padding to fit better */
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em; /* Reduce font size to fit better */
+            transition: background-color 0.3s, transform 0.2s;
+            width: 48%; /* Make the buttons take up equal space */
+        }
+
+        .add-to-cart-btn:hover, .buy-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .buy-btn {
+            background-color: #007bff;
+        }
+
+        .buy-btn:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
-<%@ include file="includes/navbar.jsp" %>
+    <%@ include file="includes/navbar.jsp" %>
     <div class="container mt-4">
         <div class="row">
             <div class="col-md-6 text-center">
@@ -142,6 +171,17 @@
 
                 <h4 class="text-muted">Price: <s>Rs.<%= price %></s></h4>
                 <h3 class="text-success">Discounted Price: Rs.<%= finalPrice %></h3>
+
+                <!-- Add to Cart and Buy Buttons -->
+                <form action="AddToCartServlet" method="post">
+                    <input type="hidden" name="productId" value="<%= product.getProductId() %>" />
+                    <input type="hidden" name="quantity" value="1" /> <!-- Default quantity set to 1 -->
+                    
+                    <div class="button-group">
+                        <input type="submit" value="Add to Cart" class="add-to-cart-btn" />
+                        <input type="submit" value="Buy" class="buy-btn"/>
+                    </div>
+                </form>
 
                 <hr>
                 <h4>Customer Reviews:</h4>

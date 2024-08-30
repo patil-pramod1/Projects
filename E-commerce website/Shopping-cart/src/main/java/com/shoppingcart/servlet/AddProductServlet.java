@@ -37,13 +37,12 @@ public class AddProductServlet extends HttpServlet {
         String category = request.getParameter("category");
         String stockQuantityStr = request.getParameter("stockQuantity");
 
-        // Get vendorId from the session or form
+        // Get the seller's email from the session
         HttpSession session = request.getSession();
-        String vendorIdStr = request.getParameter("vendorId");  // Assuming vendorId is passed as a form input
-        String email = (String) session.getAttribute("auth");    // Get email from session
+        String sellerEmail = (String) session.getAttribute("auth");    // Get email from session
 
-        if (email == null) {
-            System.out.println("Email not found in session. Redirecting to login.");
+        if (sellerEmail == null) {
+            System.out.println("Seller email not found in session. Redirecting to login.");
             response.sendRedirect("login_seller.jsp");
             return;
         }
@@ -53,8 +52,7 @@ public class AddProductServlet extends HttpServlet {
             description == null || description.trim().isEmpty() ||
             priceStr == null || priceStr.trim().isEmpty() ||
             category == null || category.trim().isEmpty() ||
-            stockQuantityStr == null || stockQuantityStr.trim().isEmpty() ||
-            vendorIdStr == null || vendorIdStr.trim().isEmpty()) {
+            stockQuantityStr == null || stockQuantityStr.trim().isEmpty()) {
 
             request.setAttribute("error", "Please fill out all required fields.");
             request.getRequestDispatcher("addproduct.jsp").forward(request, response);
@@ -63,12 +61,10 @@ public class AddProductServlet extends HttpServlet {
 
         double price;
         int stockQuantity;
-        int vendorId;
 
         try {
             price = Double.parseDouble(priceStr.trim());
             stockQuantity = Integer.parseInt(stockQuantityStr.trim());
-            vendorId = Integer.parseInt(vendorIdStr.trim());  // Convert vendorId to int
         } catch (NumberFormatException e) {
             e.printStackTrace();
             request.setAttribute("error", "Invalid number format.");
@@ -98,27 +94,35 @@ public class AddProductServlet extends HttpServlet {
         String dateAdded = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         String lastUpdated = dateAdded;
 
+        // Initially, set the buyer's email to an empty string
+        String buyerEmail = "";
+
+        // Get vendorId from form input or session
+        String vendorIdStr = request.getParameter("vendorId"); // Assuming vendorId is passed as a form input
+        int vendorId = Integer.parseInt(vendorIdStr.trim());
+
         // Database connection and insertion
         try (Connection connection = DBconnection.getConnection()) {
             SellerDao sellerDao = new SellerDao(connection);
-            // Pass vendorId and email to the DAO method
-            boolean isProductAdded = sellerDao.addProductseller(productName, description, price, imageUrl, category, stockQuantity, dateAdded, lastUpdated, vendorId, email);
+            // Pass all required parameters to the DAO method in the correct sequence
+            boolean isProductAdded = sellerDao.addProductseller(productName, description, price, imageUrl, category, stockQuantity, dateAdded, lastUpdated, vendorId, buyerEmail, sellerEmail);
 
             if (isProductAdded) {
-                request.setAttribute("success", "Product added successfully!");
+                // Redirect to avoid form resubmission on refresh (PRG Pattern)
+                response.sendRedirect("sellerHomepage.jsp?success=true");
             } else {
                 request.setAttribute("error", "Failed to add product.");
+                request.getRequestDispatcher("addproduct.jsp").forward(request, response);
             }
-            request.getRequestDispatcher("sellerHomepage.jsp").forward(request, response);
         } catch (SQLException e) {
             System.out.println("SQL Exception: " + e.getMessage());
             e.printStackTrace();
             request.setAttribute("error", "Database error: " + e.getMessage());
-            request.getRequestDispatcher("sellerHomepage.jsp").forward(request, response);
+            request.getRequestDispatcher("addproduct.jsp").forward(request, response);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             request.setAttribute("error", "Class not found: " + e.getMessage());
-            request.getRequestDispatcher("sellerHomepage.jsp").forward(request, response);
+            request.getRequestDispatcher("addproduct.jsp").forward(request, response);
         }
     }
 
