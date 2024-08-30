@@ -61,7 +61,7 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
 
-        .product-card img {
+        #img {
             width: 100%;
             height: auto;
             object-fit: cover;
@@ -161,7 +161,7 @@
                                 int stock = rs.getInt("stockQuantity");
             %>
             <div class="product-card">
-                <img src="<%= productImage %>" alt="<%= productName %>" style="width: 200px; height: 100px;">
+                <img id="img" src="<%= productImage %>" alt="<%= productName %>">
                 <h3><%= productName %></h3>
                 <p class="price">Rs.<%= productPrice %></p>
                 <p>Stock: <%= stock %></p>

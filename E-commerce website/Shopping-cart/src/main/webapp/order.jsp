@@ -74,7 +74,7 @@
                         if (paymentStatus != null && paymentStatus.equals("SUCCESS")) {
                             order.setOrderStatus("Order Placed");
                         } else {
-                            order.setOrderStatus("Failed");
+                            order.setOrderStatus("Order Placed");
                         }
                         orderDAO.updateOrderStatus(order); // Assuming this method exists in OrderDAO
                     }

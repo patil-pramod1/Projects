@@ -60,6 +60,128 @@
             color: #ffd700; /* Gold color for active link */
             font-weight: bold;
         }
+       
+        body {
+            background: linear-gradient(to right, #e0c3fc, #8ec5fc);
+            font-family: 'Arial', sans-serif;
+            color: #333;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            margin: 0 auto;
+            padding: 0 15px;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        .product-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 15px;
+            height: 100%;
+            box-sizing: border-box;
+            min-height: 350px;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        .product-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .product-card h3 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .product-card p {
+            flex-grow: 1;
+            margin-bottom: 10px;
+        }
+        .price-quantity-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .price {
+            color: #ff5722;
+            font-size: 1.1em;
+            margin: 0;
+        }
+        .quantity-input {
+            display: inline-block;
+            width: 60px;
+            border-radius: 5px;
+            text-align: center;
+            border: 1px solid #ddd;
+            padding: 5px;
+            font-size: 1em;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        .add-to-cart-btn, .buy-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: background-color 0.3s, transform 0.2s;
+            width: 48%;
+        }
+        .add-to-cart-btn:hover, .buy-btn:hover {
+            transform: translateY(-2px);
+        }
+        .buy-btn {
+            background-color: #007bff;
+        }
+        .buy-btn:hover {
+            background-color: #0056b3;
+        }
+        @media (max-width: 1200px) {
+            .product-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        @media (max-width: 992px) {
+            .product-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 576px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .pagination-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .product-container {
+            margin-top: 0.5cm; /* Set a 0.5cm gap between navbar and product grid */
+        }
+ 
     </style>
 <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid">

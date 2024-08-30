@@ -64,7 +64,7 @@ public class OrderDAO {
     public List<Order> getOrdersBySellerEmail(String sellerEmail) throws SQLException, ClassNotFoundException {
         List<Order> ordersList = new ArrayList<>();
 
-        String sql = "SELECT * FROM revshop.receivedorders WHERE sellerEmail = ?";
+        String sql = "SELECT * FROM revshop.orders WHERE seller_email = ?";
 
         try (Connection connection = DBconnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
