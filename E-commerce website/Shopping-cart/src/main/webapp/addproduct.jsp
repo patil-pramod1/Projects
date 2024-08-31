@@ -73,9 +73,9 @@
         <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
     </div>
     <div class="form-group">
-        <label for="price">Price:</label>
-        <input type="number" class="form-control" id="price" name="price" step="0.01" required>
-    </div>
+    <label for="price">Price:</label>
+    <input type="number" class="form-control" id="price" name="price" step="0.1" min="1" required>
+</div>
     <div class="form-group">
         <label for="imageFile">Upload Image:</label>
         <input type="file" class="form-control" id="imageFile" name="imageFile" accept="image/*" required>
@@ -92,9 +92,9 @@
 </div>
 
     <div class="form-group">
-        <label for="stockQuantity">Stock Quantity:</label>
-        <input type="number" class="form-control" id="stockQuantity" name="stockQuantity" required>
-    </div>
+    <label for="stockQuantity">Stock Quantity:</label>
+    <input type="number" class="form-control" id="stockQuantity" name="stockQuantity" min="1" required>
+</div>
     <button type="submit" class="btn btn-primary">Add Product</button>
 </form>
 

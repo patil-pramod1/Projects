@@ -9,17 +9,21 @@ public class Review {
     private int rating;           // The rating given by the reviewer (1 to 5)
     private String comment;       // The review text
     private Timestamp reviewDate; // The date and time when the review was submitted
+    private String email;         // The email of the reviewer
+    private String sellerEmail;   // The email of the seller associated with the product
 
     // Default constructor
     public Review() {
     }
 
     // Parameterized constructor
-    public Review(int productId, String reviewerName, int rating, String comment) {
+    public Review(int productId, String reviewerName, int rating, String comment, String email, String sellerEmail) {
         this.productId = productId;
         this.reviewerName = reviewerName;
         this.rating = rating;
         this.comment = comment;
+        this.email = email;
+        this.sellerEmail = sellerEmail;
     }
 
     // Getters and Setters
@@ -72,6 +76,22 @@ public class Review {
         this.reviewDate = reviewDate;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSellerEmail() {
+        return sellerEmail;
+    }
+
+    public void setSellerEmail(String sellerEmail) {
+        this.sellerEmail = sellerEmail;
+    }
+
     @Override
     public String toString() {
         return "Review{" +
@@ -81,7 +101,8 @@ public class Review {
                 ", rating=" + rating +
                 ", comment='" + comment + '\'' +
                 ", reviewDate=" + reviewDate +
+                ", email='" + email + '\'' +
+                ", sellerEmail='" + sellerEmail + '\'' +
                 '}';
     }
 }
-

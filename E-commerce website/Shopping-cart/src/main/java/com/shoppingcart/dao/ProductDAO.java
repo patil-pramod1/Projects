@@ -191,4 +191,148 @@ public class ProductDAO {
         
         return productList;
     }
+
+    public List<Product> getProducts(int itemsPerPage, int offset) throws SQLException, ClassNotFoundException {
+        List<Product> products = new ArrayList<>();
+        String query = "SELECT * FROM revshop.product LIMIT ? OFFSET ?";
+        
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, itemsPerPage);
+            pstmt.setInt(2, offset);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Product product = new Product();
+                    product.setProductId(rs.getInt("productId"));
+                    product.setProductName(rs.getString("productName"));
+                    product.setImageUrl(rs.getString("imageUrl"));
+                    product.setPrice(rs.getBigDecimal("price"));
+                    product.setStock(rs.getInt("stockQuantity"));
+                    products.add(product);
+                }
+            }
+        }
+        return products;
+    }
+
+    public int getTotalProductCount() throws SQLException, ClassNotFoundException {
+        String query = "SELECT COUNT(*) AS total FROM revshop.product";
+        int totalItems = 0;
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            if (rs.next()) {
+                totalItems = rs.getInt("total");
+            }
+        }
+        return totalItems;
+    }
+    public void addReview(int productId, String reviewerName, int rating, String comment, String email, String sellerEmail) throws ClassNotFoundException {
+        String query = "INSERT INTO revshop.reviews (productId, reviewerName, rating, comment, reviewDate, email, sellerEmail) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection connection = getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setInt(1, productId);
+            stmt.setString(2, reviewerName);
+            stmt.setInt(3, rating);
+            stmt.setString(4, comment);
+            stmt.setTimestamp(5, new java.sql.Timestamp(System.currentTimeMillis())); // current timestamp
+            stmt.setString(6, email);
+            stmt.setString(7, sellerEmail);
+            
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public List<Review> getReviewsBySellerEmail(String sellerEmail) throws SQLException, ClassNotFoundException {
+        List<Review> reviews = new ArrayList<>();
+        String sql = "SELECT * FROM revshop.reviews WHERE sellerEmail = ?";
+
+        try (Connection connection = getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setString(1, sellerEmail);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Review review = new Review();
+                    review.setReviewId(rs.getInt("reviewId"));
+                    review.setProductId(rs.getInt("productId"));
+                    review.setReviewerName(rs.getString("reviewerName"));
+                    review.setRating(rs.getInt("rating"));
+                    review.setComment(rs.getString("comment"));
+                    review.setReviewDate(rs.getTimestamp("reviewDate"));
+                    review.setEmail(rs.getString("email"));
+                    review.setSellerEmail(rs.getString("sellerEmail"));
+                    reviews.add(review);
+                }
+            }
+        }
+        return reviews;
+    }
+    public void checkAndHandleLowStock(int productId) throws SQLException, ClassNotFoundException {
+        String checkStockSql = "SELECT productName, stockQuantity FROM revshop.product WHERE productId = ?";
+        String deleteProductSql = "DELETE FROM revshop.product WHERE productId = ?";
+
+        try (Connection connection = DBconnection.getConnection();
+             PreparedStatement checkStockStmt = connection.prepareStatement(checkStockSql);
+             PreparedStatement deleteProductStmt = connection.prepareStatement(deleteProductSql)) {
+            
+            checkStockStmt.setInt(1, productId);
+            try (ResultSet rs = checkStockStmt.executeQuery()) {
+                if (rs.next()) {
+                    int stockQuantity = rs.getInt("stockQuantity");
+                    String productName = rs.getString("productName");
+
+                    if (stockQuantity < 5 && stockQuantity > 0) {
+                        throw new SQLException("Warning: Stock for product '" + productName + "' is low (" + stockQuantity + " items left).");
+                    } else if (stockQuantity == 0) {
+                        deleteProductStmt.setInt(1, productId);
+                        deleteProductStmt.executeUpdate();
+                        throw new SQLException("Product '" + productName + "' is out of stock and has been removed from the inventory.");
+                    }
+                }
+            }
+        }
+    }
+    
+    public void reduceStockQuantity(int productId, int quantity) throws SQLException, ClassNotFoundException {
+        String updateStockSql = "UPDATE revshop.product SET stockQuantity = stockQuantity - ? WHERE productId = ?";
+        
+        try (Connection connection = DBconnection.getConnection();
+             PreparedStatement updateStockStmt = connection.prepareStatement(updateStockSql)) {
+            
+            updateStockStmt.setInt(1, quantity);
+            updateStockStmt.setInt(2, productId);
+            updateStockStmt.executeUpdate();
+            
+            // Check stock quantity after reduction
+            checkAndHandleLowStock(productId);
+        }
+    }
+    public List<Product> getLowStockProducts(String sellerEmail) throws SQLException, ClassNotFoundException {
+        List<Product> lowStockProducts = new ArrayList<>();
+        String sql = "SELECT productId, productName, stockQuantity FROM revshop.product WHERE sellerEmail = ? AND stockQuantity < 5";
+
+        try (Connection connection = DBconnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, sellerEmail);
+
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    Product product = new Product();
+                    product.setProductId(rs.getInt("productId"));
+                    product.setProductName(rs.getString("productName"));
+                    product.setStock(rs.getInt("stockQuantity"));
+                    lowStockProducts.add(product);
+                }
+            }
+        }
+        return lowStockProducts;
+    }
 }

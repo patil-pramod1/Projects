@@ -46,10 +46,12 @@ public class ConfirmOrderServlet extends HttpServlet {
         try {
             // Fetch the cart item using the cartId
             CartItem cartItem = cartDAO.getCartItemById(cartId);
+            response.sendRedirect("orderConfirmation.jsp");
 
             if (cartItem != null) {
                 // Fetch product details to get the seller's email
                 Product product = productDAO.getProductById(cartItem.getProductId());
+                cartDAO.removeFromCart(cartId);
 
                 if (product != null) {
                     // Create an Order object
@@ -58,14 +60,20 @@ public class ConfirmOrderServlet extends HttpServlet {
                     // Save the order for the buyer
                     saveOrder(order);
 
-                    // Save the order for the seller
-                   
+                    // Reduce the stock quantity in the product database and handle low stock situations
+                    try {
+                        productDAO.reduceStockQuantity(cartItem.getProductId(), cartItem.getQuantity());
+                    } catch (SQLException e) {
+                        request.setAttribute("error", "Error updating stock: " + e.getMessage());
+                        request.getRequestDispatcher("error.jsp").forward(request, response);
+                        return;
+                    }
 
                     // Remove the item from the cart
-                    cartDAO.removeFromCart(cartId);
+         
 
                     // Redirect to a success page after the order is confirmed
-                    response.sendRedirect("orderConfirmation.jsp");
+                    
                 } else {
                     // Handle case where the product is not found
                     response.sendRedirect("error.jsp");
@@ -74,7 +82,7 @@ public class ConfirmOrderServlet extends HttpServlet {
                 // Handle case where cartItem is not found
                 response.sendRedirect("error.jsp");
             }
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             response.sendRedirect("error.jsp");
         }
@@ -152,7 +160,6 @@ public class ConfirmOrderServlet extends HttpServlet {
         }
     }
 
-   
     // Method to generate a unique order number
     private String generateUserOrderNumber(String email) {
         return email + "-" + System.currentTimeMillis();

@@ -22,7 +22,7 @@ public class UpdateOrderStatusServlet extends HttpServlet {
         String orderStatus = request.getParameter("orderStatus");
 
         try (Connection connection = DBconnection.getConnection()) {
-            String sql = "UPDATE revshop.receivedorders SET orderStatus = ? WHERE orderId = ?";
+            String sql = "UPDATE revshop.orders SET orderStatus = ? WHERE orderId = ?";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, orderStatus);
                 statement.setInt(2, orderId);

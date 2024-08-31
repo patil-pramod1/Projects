@@ -115,6 +115,10 @@
                     </div>
                 </li>
 
+                <li class="nav-item <% if(request.getRequestURI().contains("wishlist.jsp")) { %> active <% } %>">
+                    <a class="nav-link" href="wishlist.jsp"><i class="fas fa-heart"></i> Wishlist</a>
+                </li>
+
                 <li class="nav-item <% if(request.getRequestURI().contains("cart.jsp")) { %> active <% } %>">
                     <a class="nav-link" href="cart.jsp"><i class="fas fa-shopping-cart"></i> Cart</a>
                 </li>
@@ -141,7 +145,7 @@
 </nav>
 <br>
 <br>
-
+<br>
 
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

@@ -43,12 +43,12 @@
 
                     <div class="form-group">
                         <label for="productPrice">Price</label>
-                        <input type="text" class="form-control" id="productPrice" name="productPrice" value="<%= rs.getString("price") %>" required>
+                        <input type="text" class="form-control" id="productPrice" name="productPrice" value="<%= rs.getString("price") %>" min="1" required>
                     </div>
 
                     <div class="form-group">
                         <label for="stockQuantity">Stock Quantity</label>
-                        <input type="number" class="form-control" id="stockQuantity" name="stockQuantity" value="<%= rs.getInt("stockQuantity") %>" required>
+                        <input type="number" class="form-control" id="stockQuantity" name="stockQuantity" value="<%= rs.getInt("stockQuantity") %>" min="1" required>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Save Changes</button>

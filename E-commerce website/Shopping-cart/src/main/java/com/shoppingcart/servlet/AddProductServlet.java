@@ -2,6 +2,7 @@ package com.shoppingcart.servlet;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -61,10 +62,16 @@ public class AddProductServlet extends HttpServlet {
 
         double price;
         int stockQuantity;
+        
 
         try {
             price = Double.parseDouble(priceStr.trim());
             stockQuantity = Integer.parseInt(stockQuantityStr.trim());
+            if (price < 0 || stockQuantity < 1) {
+                request.setAttribute("error", "Price must be at least 1 and stock quantity must be at least 1.");
+                request.getRequestDispatcher("addProduct.jsp").forward(request, response);
+                return;
+            }
         } catch (NumberFormatException e) {
             e.printStackTrace();
             request.setAttribute("error", "Invalid number format.");

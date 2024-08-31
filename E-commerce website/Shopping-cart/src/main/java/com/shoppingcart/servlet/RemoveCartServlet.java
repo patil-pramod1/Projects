@@ -21,7 +21,15 @@ public class RemoveCartServlet extends HttpServlet {
         
         // Retrieve the cartId from the request
         String cartIdStr = request.getParameter("cartId");
-        int cartId = Integer.parseInt(cartIdStr);
+        int cartId;
+
+        try {
+            cartId = Integer.parseInt(cartIdStr);
+        } catch (NumberFormatException e) {
+            // Handle the case where cartId is not a valid number
+            response.sendRedirect("error.jsp");
+            return;
+        }
 
         CartDAO cartDAO = new CartDAO();
 

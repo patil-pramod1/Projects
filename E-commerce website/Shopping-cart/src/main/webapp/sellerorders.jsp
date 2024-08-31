@@ -140,8 +140,6 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>Order ID</th>
-                    <th>Product ID</th>
                     <th>Product Name</th>
                     <th>Quantity</th>
                     <th>Price</th>
@@ -173,8 +171,6 @@
                             for (Order order : ordersList) {
                 %>
                 <tr>
-                    <td><%= order.getOrderId() %></td>
-                    <td><%= order.getProductId() %></td>
                     <td><%= order.getProductName() %></td>
                     <td><%= order.getQuantity() %></td>
                     <td><%= order.getPrice() %></td>

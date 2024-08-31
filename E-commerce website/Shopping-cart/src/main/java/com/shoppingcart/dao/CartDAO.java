@@ -140,7 +140,7 @@ public class CartDAO {
             int rowsAffected = statement.executeUpdate();
             
             if (rowsAffected > 0) {
-                System.out.println("Cart item with cartId " + cartId + " removed successfully.");
+                System.out.println("Cart item with cartId " + cartId + " removed successfully."+rowsAffected);
             } else {
                 System.out.println("Cart item with cartId " + cartId + " not found.");
             }

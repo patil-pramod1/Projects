@@ -109,13 +109,41 @@ public class ProcessOrderServlet extends HttpServlet {
             response.sendRedirect("error.jsp");
         }
     }
+
     private BigDecimal processSingleCartItem(CartDAO cartDAO, CartItem cartItem, Product product, String email) throws SQLException, ClassNotFoundException {
         int userOrderNumber = getNextUserOrderNumber(email);
+
+        // Reduce the product stock by the quantity ordered
+        boolean stockUpdated = updateProductStock(product.getProductId(), cartItem.getQuantity());
+
+        if (!stockUpdated) {
+            throw new SQLException("Failed to update stock for product ID: " + product.getProductId());
+        }
+
         saveOrder(createOrder(cartItem, product, email, userOrderNumber));
         cartDAO.removeFromCart(cartItem.getCartId());
 
         return cartItem.getPrice().multiply(new BigDecimal(cartItem.getQuantity()));
     }
+
+    private boolean updateProductStock(int productId, int quantity) throws SQLException, ClassNotFoundException {
+        // Updated column name to match the database
+        String updateStockSql = "UPDATE revshop.product SET stockQuantity = stockQuantity - ? WHERE productId = ? AND stockQuantity >= ?";
+
+        try (Connection connection = DBconnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(updateStockSql)) {
+
+            statement.setInt(1, quantity);
+            statement.setInt(2, productId);
+            statement.setInt(3, quantity); // Ensure stock doesn't go negative
+
+            int rowsAffected = statement.executeUpdate();
+
+            // If no rows were updated, it means there wasn't enough stock
+            return rowsAffected > 0;
+        }
+    }
+
 
     private void updateProductEmail(List<CartItem> cartItems, String buyerEmail) throws SQLException, ClassNotFoundException {
         String updateSql = "UPDATE revshop.product SET email = ? WHERE productId = ?";

@@ -182,8 +182,7 @@
             margin-top: 0.5cm; /* Set a 0.5cm gap between navbar and product grid */
         }
  
-    </style>
-<nav class="navbar navbar-expand-lg navbar-light">
+    </style><nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid">
         <!-- Left Section: Home Icon and RevShop -->
         <a href="sellerHomepage.jsp" class="home-icon"><i class="fas fa-home"></i></a> <!-- Home Icon -->
@@ -203,6 +202,9 @@
                     </li>
                     <li class="nav-item <%= request.getRequestURI().contains("sellerorders.jsp") ? "active" : "" %>">
                         <a class="nav-link" href="sellerorders.jsp"><i class="fas fa-box"></i> Orders</a>
+                    </li>
+                    <li class="nav-item <%= request.getRequestURI().contains("reviews.jsp") ? "active" : "" %>">
+                        <a class="nav-link" href="reviews.jsp"><i class="fas fa-star"></i> Reviews</a>
                     </li>
                     <li class="nav-item <%= request.getRequestURI().contains("logout.jsp") ? "active" : "" %>">
                         <a class="nav-link" href="logout.jsp"><i class="fas fa-sign-out-alt"></i> Logout</a>

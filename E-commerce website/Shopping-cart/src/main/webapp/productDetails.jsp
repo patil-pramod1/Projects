@@ -169,8 +169,8 @@
                     BigDecimal finalPrice = price.subtract(discountAmount);
                 %>
 
-                <h4 class="text-muted">Price: <s>Rs.<%= price %></s></h4>
-                <h3 class="text-success">Discounted Price: Rs.<%= finalPrice %></h3>
+                
+                <h3 class="text-success">Price: Rs.<%= finalPrice %></h3>
 
                 <!-- Add to Cart and Buy Buttons -->
                 <form action="AddToCartServlet" method="post">

@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
-<%@ page import="java.sql.SQLException" %>
-<%@ page import="com.shoppingcart.usermodel.CartItem" %>
+<%@ page import="java.sql.*" %>
 <%@ page import="com.shoppingcart.dao.CartDAO" %>
+<%@ page import="com.shoppingcart.usermodel.CartItem" %>
 <%@ page import="java.math.BigDecimal" %>
 <%@ include file="includes/navbar.jsp" %>
 
