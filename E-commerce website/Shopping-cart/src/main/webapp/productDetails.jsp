@@ -23,12 +23,14 @@
         }
 
         .product-image {
-            width: 100%;
-            max-width: 380px; /* Adjusted max-width */
-            height: auto;
-            border-radius: 20px; /* More pronounced rounded corners */
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Deeper shadow for more depth */
-            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for transform and shadow */
+           
+    width: 100%;
+    height: 150px;
+    object-fit: contain; /* Change from cover to contain */
+    border-radius: 10px;
+    margin-bottom: 15px;
+    background-color: #f8f8f8; /* Optional: Add background color to fill space if the image doesn't cover entire area */
+  /* Smooth transition for transform and shadow */
         }
 
         .product-image:hover {
@@ -153,6 +155,7 @@
     <div class="container mt-4">
         <div class="row">
             <div class="col-md-6 text-center">
+            <p>Image URL: <%= product.getImageUrl() %></p>
                 <img src="<%= product.getImageUrl() %>" alt="<%= product.getProductName() %>" class="product-image">
             </div>
             <div class="col-md-6">

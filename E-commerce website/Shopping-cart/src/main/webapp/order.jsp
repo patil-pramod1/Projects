@@ -48,6 +48,11 @@
             font-size: 1.2em;
             margin: 50px 0;
         }
+         body {
+            background: linear-gradient(to right, #e0c3fc, #8ec5fc);
+            font-family: 'Arial', sans-serif;
+            color: #333;
+        }
     </style>
 </head>
 

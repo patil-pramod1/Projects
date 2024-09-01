@@ -15,8 +15,8 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        /* Additional styles for favorite button */
+   <style>
+      
         .favorite-btn {
             color: white;
             font-size: 1.5em;
@@ -91,12 +91,13 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
         .product-card img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 15px;
-        }
+    width: 100%;
+    height: 150px;
+    object-fit: contain; /* Change from cover to contain */
+    border-radius: 10px;
+    margin-bottom: 15px;
+    background-color: #f8f8f8; /* Optional: Add background color to fill space if the image doesn't cover entire area */
+} 
         .product-card h3 {
             font-size: 1.2em;
             margin-bottom: 10px;
@@ -147,6 +148,33 @@
         .buy-btn:hover {
             background-color: #0056b3;
         }
+   
+
+@media (max-width: 1200px) {
+    .product-grid {
+        grid-template-columns: repeat(4, 1fr); /* 4 products per row for medium screens */
+    }
+}
+
+@media (max-width: 992px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3 products per row for tablets */
+    }
+}
+
+@media (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 products per row for small screens */
+    }
+}
+
+@media (max-width: 576px) {
+    .product-grid {
+        grid-template-columns: 1fr; /* 1 product per row for extra small screens */
+    }
+}
+
+
     </style>
 </head>
 <body>
