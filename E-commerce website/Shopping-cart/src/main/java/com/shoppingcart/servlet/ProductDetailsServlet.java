@@ -30,6 +30,9 @@ public class ProductDetailsServlet extends HttpServlet {
 			} catch (NumberFormatException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
             if (product != null) {

@@ -34,6 +34,10 @@ public class SubmitReviewServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} // Assuming you have this method to get the product details
+ catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         if (product != null) {
             String sellerEmail = product.getSellerEmail(); // Get sellerEmail from the product

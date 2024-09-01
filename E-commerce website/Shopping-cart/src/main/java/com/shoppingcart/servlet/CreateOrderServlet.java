@@ -3,6 +3,7 @@ package com.shoppingcart.servlet;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
+import org.json.JSONObject;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -12,8 +13,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-
-import org.json.JSONObject;
 
 @WebServlet("/CreateOrderServlet")
 public class CreateOrderServlet extends HttpServlet {

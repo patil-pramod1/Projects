@@ -76,7 +76,7 @@
                         } else {
                             order.setOrderStatus("Order Placed");
                         }
-                        orderDAO.updateOrderStatus(order); // Assuming this method exists in OrderDAO
+                        //orderDAO.updateOrderStatus(order); // Assuming this method exists in OrderDAO
                     }
                 }
 

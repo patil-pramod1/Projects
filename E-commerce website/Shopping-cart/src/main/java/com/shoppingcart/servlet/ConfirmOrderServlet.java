@@ -51,7 +51,6 @@ public class ConfirmOrderServlet extends HttpServlet {
             if (cartItem != null) {
                 // Fetch product details to get the seller's email
                 Product product = productDAO.getProductById(cartItem.getProductId());
-                cartDAO.removeFromCart(cartId);
 
                 if (product != null) {
                     // Create an Order object
@@ -70,7 +69,8 @@ public class ConfirmOrderServlet extends HttpServlet {
                     }
 
                     // Remove the item from the cart
-         
+                    cartDAO.removeFromCart(cartItem.getCartId());
+
 
                     // Redirect to a success page after the order is confirmed
                     

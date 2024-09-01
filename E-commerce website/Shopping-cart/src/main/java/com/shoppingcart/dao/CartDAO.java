@@ -185,17 +185,4 @@ public class CartDAO {
         return item;
     }
 
-    // Method to clear the cart for a specific user
-    public void clearCart(String email) throws SQLException {
-        String sql = "DELETE FROM revshop.cart WHERE email = ?";
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-
-            statement.setString(1, email);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw e;
-        }
-    }
 }

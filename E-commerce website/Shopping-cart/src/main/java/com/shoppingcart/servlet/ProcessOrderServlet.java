@@ -121,7 +121,6 @@ public class ProcessOrderServlet extends HttpServlet {
         }
 
         saveOrder(createOrder(cartItem, product, email, userOrderNumber));
-        cartDAO.removeFromCart(cartItem.getCartId());
 
         return cartItem.getPrice().multiply(new BigDecimal(cartItem.getQuantity()));
     }

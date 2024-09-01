@@ -24,30 +24,28 @@ public class ProductDAO {
     }
 
     // Method to retrieve a product by its ID
-    public Product getProductById(int productId) throws SQLException {
-        String sql = "SELECT * FROM revshop.product WHERE productId = ?";
-
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+    public Product getProductById(int productId) throws SQLException, ClassNotFoundException {
+        String query = "SELECT * FROM revshop.product WHERE productId = ?";
+        try (Connection connection = DBconnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, productId);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    Product product = new Product();
-                    product.setProductId(resultSet.getInt("productId"));
-                    product.setProductName(resultSet.getString("productName"));
-                    product.setDescription(resultSet.getString("description"));
-                    product.setPrice(resultSet.getBigDecimal("price"));
-                    product.setImageUrl(resultSet.getString("imageUrl"));
-                    product.setCategory(resultSet.getString("category"));
-                    product.setStock(resultSet.getInt("stockQuantity"));
-                    product.setSellerEmail(resultSet.getString("sellerEmail")); // Get sellerEmail
-                    return product;
-                }
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                Product product = new Product();
+                product.setProductId(resultSet.getInt("productId"));
+                product.setProductName(resultSet.getString("productName"));
+                product.setPrice(resultSet.getBigDecimal("price"));
+                product.setStock(resultSet.getInt("stockQuantity"));
+                product.setSellerEmail(resultSet.getString("sellerEmail"));
+                return product;
+            } else {
+                return null;
             }
         }
-        return null; // Product not found
     }
+
 
     // Method to add a cart item to the database
     public void addToCart(String email, CartItem cartItem) throws SQLException, ClassNotFoundException {

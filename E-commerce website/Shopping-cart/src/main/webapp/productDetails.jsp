@@ -162,15 +162,14 @@
                 <%
                     // Ensure price and discount are not null
                     BigDecimal price = product.getPrice() != null ? product.getPrice() : BigDecimal.ZERO;
-                    BigDecimal discount = product.getDiscount() != null ? product.getDiscount() : BigDecimal.ZERO;
+                    
 
                     // Calculate the discount amount and final price after applying the discount
-                    BigDecimal discountAmount = price.multiply(discount).divide(new BigDecimal(100));
-                    BigDecimal finalPrice = price.subtract(discountAmount);
+                   
                 %>
 
                 
-                <h3 class="text-success">Price: Rs.<%= finalPrice %></h3>
+                <h3 class="text-success">Price: Rs.<%= price %></h3>
 
                 <!-- Add to Cart and Buy Buttons -->
                 <form action="AddToCartServlet" method="post">
