@@ -10,6 +10,7 @@ import java.util.Date;
 
 import com.shoppingcart.connection.DBconnection;
 import com.shoppingcart.dao.CartDAO;
+import com.shoppingcart.dao.EmailUtil;
 import com.shoppingcart.dao.ProductDAO;
 import com.shoppingcart.dao.Userdao;
 import com.shoppingcart.usermodel.CartItem;
@@ -46,7 +47,6 @@ public class ConfirmOrderServlet extends HttpServlet {
         try {
             // Fetch the cart item using the cartId
             CartItem cartItem = cartDAO.getCartItemById(cartId);
-            response.sendRedirect("orderConfirmation.jsp");
 
             if (cartItem != null) {
                 // Fetch product details to get the seller's email
@@ -58,6 +58,7 @@ public class ConfirmOrderServlet extends HttpServlet {
 
                     // Save the order for the buyer
                     saveOrder(order);
+                    
 
                     // Reduce the stock quantity in the product database and handle low stock situations
                     try {
@@ -69,8 +70,10 @@ public class ConfirmOrderServlet extends HttpServlet {
                     }
 
                     // Remove the item from the cart
-                    cartDAO.removeFromCart(cartItem.getCartId());
+                    cartDAO.removeFromCart(cartId);
 
+                    response.sendRedirect("orderConfirmation.jsp");
+                    
 
                     // Redirect to a success page after the order is confirmed
                     
@@ -164,4 +167,5 @@ public class ConfirmOrderServlet extends HttpServlet {
     private String generateUserOrderNumber(String email) {
         return email + "-" + System.currentTimeMillis();
     }
+   
 }

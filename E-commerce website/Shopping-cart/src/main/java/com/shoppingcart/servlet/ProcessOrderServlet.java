@@ -11,6 +11,7 @@ import java.util.List;
 
 import com.shoppingcart.connection.DBconnection;
 import com.shoppingcart.dao.CartDAO;
+import com.shoppingcart.dao.OrderService;
 import com.shoppingcart.dao.ProductDAO;
 import com.shoppingcart.usermodel.CartItem;
 import com.shoppingcart.usermodel.Order;
@@ -72,6 +73,7 @@ public class ProcessOrderServlet extends HttpServlet {
             }
 
             BigDecimal totalAmount = BigDecimal.ZERO;
+            Order order = null;
 
             for (CartItem cartItem : cartItems) {
                 Product product = productDAO.getProductById(cartItem.getProductId());
@@ -85,6 +87,10 @@ public class ProcessOrderServlet extends HttpServlet {
                     cartItem.setPaymentMethod(paymentMethod);
 
                     totalAmount = totalAmount.add(processSingleCartItem(cartDAO, cartItem, product, email));
+                    
+                    // Create the order object for each cart item
+                    order = createOrder(cartItem, product, email, getNextUserOrderNumber(email));
+                    saveOrder(order);
                 } else {
                     System.out.println("Product not found for productId: " + cartItem.getProductId());
                     response.sendRedirect("error.jsp");
@@ -101,8 +107,15 @@ public class ProcessOrderServlet extends HttpServlet {
 
             updateProductEmail(cartItems, email); // Update the email in the product table
 
+            // Send order notification emails after order has been placed
+            
+            
             request.setAttribute("successMessage", "Order placed successfully!");
             request.getRequestDispatcher("orderSuccess.jsp").forward(request, response);
+            if (order != null) {
+                OrderService.sendOrderNotificationEmails(order);
+            }
+
 
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
