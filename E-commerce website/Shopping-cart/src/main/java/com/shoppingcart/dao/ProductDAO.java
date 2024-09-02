@@ -36,7 +36,9 @@ public class ProductDAO {
                 Product product = new Product();
                 product.setProductId(resultSet.getInt("productId"));
                 product.setProductName(resultSet.getString("productName"));
+                product.setImageUrl(resultSet.getString("imageUrl"));
                 product.setPrice(resultSet.getBigDecimal("price"));
+                product.setDescription(resultSet.getString("description"));
                 product.setStock(resultSet.getInt("stockQuantity"));
                 product.setSellerEmail(resultSet.getString("sellerEmail"));
                 return product;

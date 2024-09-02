@@ -84,6 +84,10 @@
 </style>
 </head>
 <body>
+<%if (session.getAttribute("auth") == null) {
+    response.sendRedirect("login_buyer.jsp");
+    return;
+} %>
 
 <nav class="navbar navbar-expand-lg navbar-light fixed-top">
     <div class="container-fluid">
@@ -124,8 +128,8 @@
                 </li>
                 <% if (session.getAttribute("auth") != null) { %>
                     <!-- User is logged in -->
-                    <li class="nav-item <% if(request.getRequestURI().contains("orders.jsp")) { %> active <% } %>">
-                        <a class="nav-link" href="order.jsp"><i class="fas fa-box"></i> Orders</a>
+                    <li class="nav-item <% if(request.getRequestURI().contains("orders")) { %> active <% } %>">
+                        <a class="nav-link" href="orders"><i class="fas fa-box"></i> Orders</a>
                     </li>
                     <li class="nav-item <% if(request.getRequestURI().contains("logout.jsp")) { %> active <% } %>">
                         <a class="nav-link" href="logout.jsp"><i class="fas fa-sign-out-alt"></i> Logout</a>

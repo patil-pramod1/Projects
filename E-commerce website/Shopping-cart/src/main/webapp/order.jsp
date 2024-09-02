@@ -1,9 +1,7 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.util.List" %>
-<%@ page import="java.math.BigDecimal" %>
-<%@ page import="java.sql.SQLException" %>
-<%@ page import="com.shoppingcart.usermodel.Order" %>
-<%@ page import="com.shoppingcart.dao.OrderDAO" %>
 <%@ include file="includes/navbar.jsp" %>
 
 <!DOCTYPE html>
@@ -48,7 +46,8 @@
             font-size: 1.2em;
             margin: 50px 0;
         }
-         body {
+
+        body {
             background: linear-gradient(to right, #e0c3fc, #8ec5fc);
             font-family: 'Arial', sans-serif;
             color: #333;
@@ -59,77 +58,46 @@
 <body>
     <div class="container order-container">
         <h2>Your Orders</h2>
-        <%
-            String userEmail = (String) session.getAttribute("email");
-            if (userEmail == null || userEmail.isEmpty()) {
-                response.sendRedirect("login_buyer.jsp");
-                return;
-            }
 
-            List<Order> orders = null;
+        <!-- Check for error message -->
+        <c:if test="${not empty error}">
+            <p class="text-danger">${error}</p>
+        </c:if>
 
-            try {
-                OrderDAO orderDAO = new OrderDAO();
-                orders = orderDAO.getOrdersByUser(userEmail);
+        <!-- Check if orders list is not empty -->
+        <c:if test="${not empty orders}">
+            <table class="order-table table table-hover">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Order Date</th>
+                        <th>Shipping Address</th>
+                        <th>Payment Method</th>
+                        <th>Order Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="order" items="${orders}">
+                        <tr>
+                            <td>${order.productName}</td>
+                            <td>${order.quantity}</td>
+                            <td>Rs. ${order.price.multiply(order.quantity)}</td>
+                            <td><fmt:formatDate value="${order.orderDate}" pattern="dd-MM-yyyy"/></td>
+                            <td>${order.address}, ${order.city}, ${order.state}, ${order.zipCode}</td>
+                            <td>${order.paymentMethod}</td>
+                            <td>${order.orderStatus}</td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+        </c:if>
 
-                // Update order status based on payment success or failure
-                if (orders != null) {
-                    for (Order order : orders) {
-                        String paymentStatus = order.getPaymentStatus();
-                        if (paymentStatus != null && paymentStatus.equals("SUCCESS")) {
-                            order.setOrderStatus("Order Placed");
-                        } else {
-                            order.setOrderStatus("Order Placed");
-                        }
-                        //orderDAO.updateOrderStatus(order); // Assuming this method exists in OrderDAO
-                    }
-                }
-
-                if (orders != null && !orders.isEmpty()) {
-        %>
-        <table class="order-table table table-hover">
-            <thead>
-                <tr>
-                    <th>Product Name</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Order Date</th>
-                    <th>Shipping Address</th>
-                    <th>Payment Method</th>
-                    <th>Order Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <%
-                    for (Order order : orders) {
-                %>
-                <tr>
-                    <td><%= order.getProductName() %></td>
-                    <td><%= order.getQuantity() %></td>
-                    <td>Rs.<%= order.getPrice().multiply(new BigDecimal(order.getQuantity())) %></td>
-                    <td><%= new java.text.SimpleDateFormat("dd-MM-yyyy").format(order.getOrderDate()) %></td>
-                    <td><%= order.getAddress() %>, <%= order.getCity() %>, <%= order.getState() %>, <%= order.getZipCode() %></td>
-                    <td><%= order.getPaymentMethod() %></td>
-                    <td><%= order.getOrderStatus() %></td>
-                </tr>
-                <%
-                    }
-                %>
-            </tbody>
-        </table>
-        <%
-            } else {
-        %>
-        <p class="no-orders-message">No orders found.</p>
-        <%
-            }
-        %>
-        <%
-            } catch (SQLException | ClassNotFoundException e) {
-                e.printStackTrace(); // Log the exception using a logging framework
-                out.println("<p class='text-danger'>An error occurred while fetching orders. Please try again later.</p>");
-            }
-        %>
+        <!-- If no orders were found -->
+        <c:if test="${empty orders}">
+            <p class="no-orders-message">No orders found.</p>
+        </c:if>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

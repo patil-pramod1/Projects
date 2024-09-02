@@ -50,10 +50,10 @@ public class OrderDAO {
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, email);
-            ResultSet rs = statement.executeQuery();
-
-            while (rs.next()) {
-                orders.add(mapOrder(rs));
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    orders.add(mapOrder(rs));
+                }
             }
         }
 
@@ -71,36 +71,30 @@ public class OrderDAO {
             statement.setString(1, sellerEmail);
             try (ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
-                    Order order = new Order();
-                    order.setOrderId(rs.getInt("order_id"));
-                    order.setCartId(rs.getInt("cart_id"));
-                    order.setFullName(rs.getString("full_name"));
-                    order.setAddress(rs.getString("address"));
-                    order.setCity(rs.getString("city"));
-                    order.setState(rs.getString("state"));
-                    order.setZipCode(rs.getString("zip_code"));
-                    order.setPhone(rs.getString("phone"));
-                    order.setPaymentMethod(rs.getString("payment_method"));
-                    order.setOrderDate(rs.getTimestamp("order_date"));
-                    order.setEmail(rs.getString("email"));
-                    order.setProductId(rs.getInt("product_id"));
-                    order.setProductName(rs.getString("product_name"));
-                    order.setQuantity(rs.getInt("quantity"));
-                    order.setPrice(rs.getBigDecimal("price"));
-                    order.setUserOrderNumber(rs.getString("user_order_number"));
-                    order.setSellerEmail(rs.getString("seller_email"));
-                    order.setOrderStatus(rs.getString("order_status"));
-                    ordersList.add(order);
+                    ordersList.add(mapOrder(rs));
                 }
             }
         }
         return ordersList;
     }
 
+    // Method to update order status
+    public void updateOrderStatus(Order order) throws SQLException, ClassNotFoundException {
+        String sql = "UPDATE revshop.orders SET order_status = ? WHERE order_id = ?";
+
+        try (Connection connection = DBconnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, order.getOrderStatus());
+            statement.setInt(2, order.getOrderId());
+            statement.executeUpdate();
+        }
+    }
+
     // Utility method to map ResultSet to Order object
     private Order mapOrder(ResultSet rs) throws SQLException {
         Order order = new Order();
         order.setOrderId(rs.getInt("order_id"));
+        order.setCartId(rs.getInt("cart_id"));
         order.setProductId(rs.getInt("product_id"));
         order.setProductName(rs.getString("product_name"));
         order.setQuantity(rs.getInt("quantity"));
@@ -115,16 +109,7 @@ public class OrderDAO {
         order.setPhone(rs.getString("phone"));
         order.setPaymentMethod(rs.getString("payment_method"));
         order.setOrderStatus(rs.getString("order_status"));
+        order.setSellerEmail(rs.getString("seller_email"));
         return order;
-    }
-    public void updateOrderStatus(Order order) throws SQLException, ClassNotFoundException {
-        String sql = "UPDATE revshop.orders SET order_status = ? ";
-
-        try (Connection connection = DBconnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, order.getOrderStatus());
-            
-            statement.executeUpdate();
-        }
     }
 }

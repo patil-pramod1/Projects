@@ -1,10 +1,31 @@
-package com.shoppingcart.dao;
+package com.shoppingcart.service.impl;
 
+import java.sql.SQLException;
+import java.util.List;
+
+import com.shoppingcart.dao.EmailUtil;
+import com.shoppingcart.dao.OrderDAO;
+import com.shoppingcart.service.OrderService;
 import com.shoppingcart.usermodel.Order;
 
-public class OrderService {
+public class OrderServiceIMPL implements OrderService {
 
-    public static void sendOrderNotificationEmails(Order order) {
+	OrderDAO orderDAO = new OrderDAO();
+
+	@Override
+	public List<Order> getAllOders(String userEmail) {
+		try {
+			return orderDAO.getOrdersByUser(userEmail);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@Override
+	public void sendOrderNotificationEmails(Order order) {
         String buyerEmail = order.getEmail();
         String sellerEmail = order.getSellerEmail();
 
@@ -52,4 +73,5 @@ public class OrderService {
             System.err.println("Failed to send order notification emails: " + e.getMessage());
         }
     }
+
 }

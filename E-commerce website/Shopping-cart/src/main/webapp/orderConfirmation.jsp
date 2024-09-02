@@ -128,7 +128,51 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <script>
+        function validateForm() {
+            const fullName = document.getElementById('fullName').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const state = document.getElementById('state').value.trim();
+            const zipCode = document.getElementById('zipCode').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const paymentMethod = document.getElementById('paymentMethod').value;
+
+            if (!fullName || fullName.length < 2) {
+                alert("Please enter a valid full name.");
+                return false;
+            }
+            if (!address || address.length < 5) {
+                alert("Please enter a valid address.");
+                return false;
+            }
+            if (!city || city.length < 2) {
+                alert("Please enter a valid city.");
+                return false;
+            }
+            if (!state || state.length < 2) {
+                alert("Please enter a valid state.");
+                return false;
+            }
+            if (!zipCode || !/^\d{5,6}$/.test(zipCode)) {
+                alert("Please enter a valid zip code.");
+                return false;
+            }
+            if (!phone || !/^\d{10}$/.test(phone)) {
+                alert("Please enter a valid 10-digit phone number.");
+                return false;
+            }
+            if (!paymentMethod) {
+                alert("Please select a payment method.");
+                return false;
+            }
+            return true;
+        }
+
         document.getElementById('payButton').onclick = function(e){
+            if (!validateForm()) {
+                return;
+            }
+            
             var options = {
                 "key": "rzp_test_dChgnE1vVIlVnK", // Replace with your Razorpay API Key
                 "amount": "<%= totalAmount.multiply(new BigDecimal(100)) %>", // Amount in paise
@@ -142,7 +186,7 @@
                 },
                 "prefill": {
                     "name": document.getElementById('fullName').value,
-                    "email": "<%= userEmail != null ? userEmail : "customer@example.com" %>",
+                    "email": "<%= userEmail != null ? userEmail :"customer@example.com"%>",
                     "contact": document.getElementById('phone').value
                 },
                 "notes": {

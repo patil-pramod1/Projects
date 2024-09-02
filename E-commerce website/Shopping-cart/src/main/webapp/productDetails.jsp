@@ -25,10 +25,11 @@
         .product-image {
            
     width: 100%;
-    height: 150px;
-    object-fit: contain; /* Change from cover to contain */
+    max-width:400px;
+    height: auto;
+   /* Change from cover to contain */
     border-radius: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     background-color: #f8f8f8; /* Optional: Add background color to fill space if the image doesn't cover entire area */
   /* Smooth transition for transform and shadow */
         }
@@ -155,7 +156,7 @@
     <div class="container mt-4">
         <div class="row">
             <div class="col-md-6 text-center">
-            <p>Image URL: <%= product.getImageUrl() %></p>
+            
                 <img src="<%= product.getImageUrl() %>" alt="<%= product.getProductName() %>" class="product-image">
             </div>
             <div class="col-md-6">
@@ -165,10 +166,7 @@
                 <%
                     // Ensure price and discount are not null
                     BigDecimal price = product.getPrice() != null ? product.getPrice() : BigDecimal.ZERO;
-                    
-
-                    // Calculate the discount amount and final price after applying the discount
-                   
+                
                 %>
 
                 

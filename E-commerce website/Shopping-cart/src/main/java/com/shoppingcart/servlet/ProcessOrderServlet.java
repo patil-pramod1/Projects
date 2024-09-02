@@ -11,8 +11,9 @@ import java.util.List;
 
 import com.shoppingcart.connection.DBconnection;
 import com.shoppingcart.dao.CartDAO;
-import com.shoppingcart.dao.OrderService;
 import com.shoppingcart.dao.ProductDAO;
+import com.shoppingcart.service.OrderService;
+import com.shoppingcart.service.impl.OrderServiceIMPL;
 import com.shoppingcart.usermodel.CartItem;
 import com.shoppingcart.usermodel.Order;
 import com.shoppingcart.usermodel.Product;
@@ -26,6 +27,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet("/ProcessOrderServlet")
 public class ProcessOrderServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
+    OrderService orderService=new OrderServiceIMPL();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -113,7 +115,7 @@ public class ProcessOrderServlet extends HttpServlet {
             request.setAttribute("successMessage", "Order placed successfully!");
             request.getRequestDispatcher("orderSuccess.jsp").forward(request, response);
             if (order != null) {
-                OrderService.sendOrderNotificationEmails(order);
+            	orderService.sendOrderNotificationEmails(order);
             }
 
 

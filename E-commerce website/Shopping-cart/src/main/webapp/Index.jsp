@@ -15,163 +15,151 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-   <style>
-      
-        .favorite-btn {
-            color: white;
-            font-size: 1.5em;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-            transition: color 0.3s ease;
-            background: none;
-            border: none;
-            outline: none;
-            padding: 0;
-            text-shadow: 
-                -1px -1px 0 #000,  
-                 1px -1px 0 #000,
-                -1px  1px 0 #000,
-                 1px  1px 0 #000;
-        }
+    <style>
+<style>
+body {
+    background: linear-gradient(to right, #e0c3fc, #8ec5fc); /* Soft gradient background */
+    font-family: 'Arial', sans-serif; /* Modern font for better readability */
+    color: #333; /* Darker text for better contrast */
+}
 
-        .favorite-btn.active {
-            color: red;
-        }
+.navbar {
+    background-color: #232F3E; /* Amazon's dark blue color */
+    padding: 10px;
+}
 
-        @keyframes spark {
-            0% {
-                box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
-            }
-            70% {
-                box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
-            }
-        }
+.navbar-brand, .navbar-nav .nav-link {
+    color: #ffffff;
+    font-weight: bold;
+}
 
-        .favorite-btn:active {
-            animation: spark 0.3s ease-out;
-        }
-        
-        /* Other styles... */
-        .product-card {
-            position: relative; /* Added to position favorite button */
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            transition: transform 0.3s;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 15px;
-            height: 100%;
-            box-sizing: border-box;
-            min-height: 350px;
-        }
-        body {
-            background: linear-gradient(to right, #e0c3fc, #8ec5fc);
-            font-family: 'Arial', sans-serif;
-            color: #333;
-        }
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 20px;
-            margin: 0 auto;
-            padding: 0 15px;
-            max-width: 100%;
-            box-sizing: border-box;
-        }
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-        }
-        .product-card img {
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns per row */
+    gap: 20px;
+    margin: 20px auto;
+    padding: 0 15px;
+    max-width: 1200px;
+}
+
+.product-card {
+    position: relative; /* Ensure positioning context for favorite icon */
+    background-color: white;
+    border: 1px solid #ddd; /* Light gray border */
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    text-align: center;
+    padding: 15px;
+    transition: box-shadow 0.3s;
+}
+
+.product-card:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    /* Slightly stronger shadow on hover */
+}
+
+.product-card img {
     width: 100%;
-    height: 150px;
-    object-fit: contain; /* Change from cover to contain */
-    border-radius: 10px;
+    height: 250px; /* Increase the image height */
+    object-fit: contain;
+    /* Contain the image within the specified height */
     margin-bottom: 15px;
-    background-color: #f8f8f8; /* Optional: Add background color to fill space if the image doesn't cover entire area */
-} 
-        .product-card h3 {
-            font-size: 1.2em;
-            margin-bottom: 10px;
-            color: #333;
-        }
-        .price-quantity-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .price {
-            color: #ff5722;
-            font-size: 1.1em;
-            margin: 0;
-        }
-        .quantity-input {
-            display: inline-block;
-            width: 60px;
-            border-radius: 5px;
-            text-align: center;
-            border: 1px solid #ddd;
-            padding: 5px;
-            font-size: 1em;
-        }
-        .button-group {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-        }
-        .add-to-cart-btn, .buy-btn {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.8em;
-            transition: background-color 0.3s, transform 0.2s;
-            width: 48%;
-        }
-        .add-to-cart-btn:hover, .buy-btn:hover {
-            transform: translateY(-2px);
-        }
-        .buy-btn {
-            background-color: #007bff;
-        }
-        .buy-btn:hover {
-            background-color: #0056b3;
-        }
-   
-
-@media (max-width: 1200px) {
-    .product-grid {
-        grid-template-columns: repeat(4, 1fr); /* 4 products per row for medium screens */
-    }
 }
 
-@media (max-width: 992px) {
-    .product-grid {
-        grid-template-columns: repeat(3, 1fr); /* 3 products per row for tablets */
-    }
+.product-card h3 {
+    font-size: 1.1em;
+    color: #007185; /* Amazon's link color */
+    margin-bottom: 10px;
 }
 
-@media (max-width: 768px) {
-    .product-grid {
-        grid-template-columns: repeat(2, 1fr); /* 2 products per row for small screens */
-    }
+.price-quantity-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
 }
 
-@media (max-width: 576px) {
-    .product-grid {
-        grid-template-columns: 1fr; /* 1 product per row for extra small screens */
-    }
+.price {
+    color: #B12704; /* Amazon's price color */
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.quantity-input {
+    width: 60px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    padding: 5px;
+    text-align: center;
+}
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    align-items: stretch; /* Ensure buttons have equal height */
+}
+
+.add-to-cart-btn, .buy-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s, transform 0.2s;
+    width: 48%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-to-cart-btn:hover, .buy-btn:hover {
+    transform: translateY(-2px);
+}
+
+.buy-btn {
+    background-color: #007bff;
+}
+
+.buy-btn:hover {
+    background-color: #0056b3;
+}
+
+.favorite-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #ffffff; /* White color for the heart icon */
+    font-size: 1.5em;
+    cursor: pointer;
+    background: none;
+    border: none;
+    outline: none;
+    padding: 0;
+    transition: color 0.3s ease;
+}
+
+.favorite-btn i {
+    -webkit-text-stroke: 1px #000000; /* Thin black outline around the heart icon */
+}
+
+.favorite-btn.active {
+    color: #ff0000; /* Red color when active */
+    -webkit-text-stroke: 0px; /* Remove outline when active */
+}
+
+.pagination-container {
+    margin-top: 20px;
+}
+
+.pagination .page-link {
+    color: #007185;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #007bff;
+    
 }
 
 
@@ -224,7 +212,7 @@
                         // Check if the product is in the user's wishlist
                         boolean isFavorite = false;
                         if (email != null) {
-                            try (Statement wishlistStmt = conn.createStatement()) { // Use a new Statement for the wishlist query
+                            try (Statement wishlistStmt = conn.createStatement()) {
                                 String wishlistQuery = "SELECT * FROM revshop.wishlist WHERE email = '" + email + "' AND productId = '" + productId + "'";
                                 try (ResultSet wishlistRs = wishlistStmt.executeQuery(wishlistQuery)) {
                                     if (wishlistRs.next()) {
@@ -257,11 +245,10 @@
                     <input type="hidden" name="productId" value="<%= productId %>" />
                     <div class="price-quantity-row">
                         <p class="price">Rs.<%= productPrice %></p>
-    					
                         <div class="quantity-control">
                             <input type="number" name="quantity" value="1" min="1" max="<%= stock %>" required class="quantity-input" />
                         </div>
-                        <p class="price">Stock.<%= stock %></p>
+                        <p class="stock">Stock: <%= stock %></p>
                     </div>
                     <div class="button-group">
                         <input type="submit" value="Add to Cart" class="add-to-cart-btn" />
